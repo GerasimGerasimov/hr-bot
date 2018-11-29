@@ -1,0 +1,69 @@
+* { 
+  margin: 0;
+  padding: 0; /* Убираем отступы и поля для всех элементов */
+  font-family:'Roboto', serif;
+  font-size: 16px;
+ } 
+
+  .layout {
+    width: 100%;
+    max-width: 1366px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr repeat(12, 1fr) 1fr;
+    grid-template-rows: 90px auto 16px;
+    grid-gap: 20px;
+    height: 100vh;
+  }
+
+  .header {
+    grid-column-start: 2;
+    grid-column-end: -2;
+    /* grid-column: span 14; */
+  }
+  
+  .content{
+    grid-column: span 2/4;
+  }
+  
+  .footer {
+    grid-column: span 14;
+  }
+  
+  /*отступы и поля*/
+  .m20 {
+    margin: 20px;
+  }
+  
+  .mt20 {
+    margin-top: 20px;
+  }
+  
+  .width-100pr {
+    width: 100%;
+  }
+
+  .width-100pr {
+    width: 100%;
+  } 
+
+  .width-400px {
+    width: 400px;
+  } 
+
+  .p0 {
+    padding: 0px;
+  }
+  
+  .p20 {
+    padding: 20px;
+  }
+
+/*Шрифты*/
+.font-size-12 {font-size: 12px;} 
+.font-size-16 {font-size: 16px;} 
+.font-size-24 {font-size: 24px;}
+.font-size-32 {font-size: 32px;} 
+.font-size-48 {font-size: 48px;}
+
+.font-weight-900 {font-weight: 900;}

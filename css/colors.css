@@ -1,0 +1,40 @@
+  :root {
+    --primary-color:  #1976D2;
+    --secondary-color:#424242;
+    --accent-color:   #82B1FF;
+    --info-color:     #2196F3;
+    --error-color:    #FF5252;
+    --warning-color:  #FFC107;
+    --success-color:  #4CAF50;
+  }
+  /*цвета*/
+  /*
+  primary: '#1976D2',
+  secondary: '#424242',
+  accent: '#82B1FF',
+  error: '#FF5252',
+  info: '#2196F3',
+  success: '#4CAF50',
+  warning: '#FFC107'
+*/
+/*фон - background*/
+.bgc-primary    {background: var(--primary-color);}
+.bgc-secondary  {background: var(--secondary-color);}
+.bgc-accent     {background: var(--accent-color);}
+.bgc-info       {background: var(--info-color);}
+.bgc-error      {background: var(--error-color);}
+.bgc-warning    {background: var(--warning-color);}
+.bgc-success    {background: var(--success-color);}
+  
+/*текст - color*/
+.c-primary  {color: var(--primary-color);}
+.c-secondary{color: var(--secondary-color);}
+.c-accent   {color: var(--accent-color);}
+.c-info     {color: var(--info-color);}
+.c-error    {color: var(--error-color);}
+.c-warning  {color: var(--warning-color);}
+.c-success  {color: var(--success-color);}
+
+/*Перерменные в CSS
+https://medium.com/devschacht/%D0%B8%D0%B7%D1%83%D1%87%D0%B8%D1%82%D0%B5-css-%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5-%D0%B7%D0%B0-5-%D0%BC%D0%B8%D0%BD%D1%83%D1%82-3a5dc6193857
+*/

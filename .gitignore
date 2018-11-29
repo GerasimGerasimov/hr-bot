@@ -1,0 +1,16 @@
+﻿.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+
+# Документация по проекту (генерируемая JSDOC)
+docs
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+/node_modules/*
