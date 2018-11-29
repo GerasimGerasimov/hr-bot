@@ -50,7 +50,6 @@
 <script>
 
 export default {
-  name: 'app',
   data () {
     return {
       msg: ''
@@ -59,7 +58,7 @@ export default {
   methods:{
     tryLogin(){
       //this.$store.state.wrongLogin = !this.$store.state.wrongLogin;
-      this.$store.dispatch('tryLogin',{delay:3000});
+      this.$store.dispatch('tryLogin',{delay:500});
     }
   },
   computed: {

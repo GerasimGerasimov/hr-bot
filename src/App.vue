@@ -6,8 +6,11 @@
 </template>
 
 <script>
-  import IHeader from './components/IHeader.vue'
-  import loginForm   from './components/loginForm.vue'
+  //Login Page
+  import IHeader from './components/login/IHeader.vue'
+  import loginForm   from './components/login/loginForm.vue'
+  //Group Page
+  import GroupHeader from './components/group/GroupHeader.vue'
 
 export default {
   name: 'app',
@@ -29,7 +32,8 @@ export default {
   },
   components: {
     IHeader,
-    loginForm
+    loginForm,
+    GroupHeader
   }
 }
 
