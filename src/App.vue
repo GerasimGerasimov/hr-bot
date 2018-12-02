@@ -1,16 +1,16 @@
 <template>
   <div id="app" class="layout">
-    <i-header></i-header>
-    <login-form></login-form>
+    
+    <login-form      v-if = "page == 'login'" ></login-form>
+    <group-form v-else-if = "page == 'groups'"></group-form>
   </div>
 </template>
 
 <script>
   //Login Page
-  import IHeader from './components/login/IHeader.vue'
   import loginForm   from './components/login/loginForm.vue'
   //Group Page
-  import GroupHeader from './components/group/GroupHeader.vue'
+  import GroupForm from './components/group/GroupForm.vue'
 
 export default {
   name: 'app',
@@ -26,14 +26,16 @@ export default {
     }
   },
   computed: {
-    counter (){
-      return this.$store.state.counter;
+    page(){
+      return this.$store.getters.page;
+    },
+    loggedIn () {//loggedIn = true Пользователь вошёл в систему
+      return this.$store.getters.loggedIn;
     }
   },
   components: {
-    IHeader,
     loginForm,
-    GroupHeader
+    GroupForm
   }
 }
 

@@ -11,9 +11,15 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr repeat(12, 1fr) 1fr;
-    grid-template-rows: 90px auto 16px;
+    /*grid-template-rows: 90px auto 16px;*/
     grid-gap: 20px;
     height: 100vh;
+  }
+
+  .main {
+    background: rgb(44, 155, 22);
+    grid-column: 1/15;
+    position: relative;
   }
 
   .header {
@@ -22,14 +28,18 @@
     /* grid-column: span 14; */
   }
   
+  /*
   .content{
     grid-column: span 2/4;
   }
+  */
   
+  /*
   .footer {
     grid-column: span 14;
   }
-  
+  */
+
   /*отступы и поля*/
   .m20 {
     margin: 20px;
@@ -37,6 +47,18 @@
   
   .mt20 {
     margin-top: 20px;
+  }
+
+  .ml4 {
+    margin-left: 4px;
+  }
+
+  .ml20 {
+    margin-left: 20px;
+  }
+
+  .mr4 {
+    margin-right: 4px;
   }
   
   .width-100pr {
@@ -67,3 +89,21 @@
 .font-size-48 {font-size: 48px;}
 
 .font-weight-900 {font-weight: 900;}
+
+/*Кнопки*/
+button.__button {
+  box-sizing: border-box; /* Ширина блока с полями */
+  color: #fff; /* цвет текста */
+  user-select: none; /* убирать выделение текста */
+  padding: .0em 1.5em;/*.7em 1.5em; /* отступ от текста */
+  height: 40px;/*текст будет по центру*/
+  opacity: 0.9;
+  font-size: 16px;
+  border-radius: 4px;
+} 
+button.__button:hover { /* при наведении курсора мышки */
+  opacity: 1.0; 
+  } 
+button.__button:active { /* при нажатии */
+  opacity: 0.5; 
+}

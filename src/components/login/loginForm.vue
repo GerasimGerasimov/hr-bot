@@ -1,5 +1,20 @@
+/**
+* @description Форма входа в приложение и регистрации
+*
+*/
+
 <template>
   <div class="container p20p20">
+    <div class="header">
+      <div>
+        <span
+          class="font-size-48 font-weight-900"
+        >
+        HR-BOT
+        </span>
+      </div>
+      <div><span>Поиск и работа с кандидатами в LinkedIn</span></div>
+    </div>
     <p class="inline-center m20 c-secondary font-size-24">
       Войдите чтобы продолжить работу
     </p>
@@ -17,7 +32,6 @@
             type="email"
             v-model.lazy = "email"
             placeholder="email"
-            c
           >
           <input
             type="password"
@@ -55,19 +69,27 @@ export default {
       msg: ''
     }
   },
+  //Методы
   methods:{
+    /**
+     * tryLogin попытка логина, запускается с кнопки "НАЧАТЬ РАБОТУ"
+    */
     tryLogin(){
       //this.$store.state.wrongLogin = !this.$store.state.wrongLogin;
       this.$store.dispatch('tryLogin',{delay:500});
     }
   },
+  //Вычисляемые свойства
   computed: {
+    //wrongLogin = true - индикатор что пара логин/пароль отвергнута сервером
     wrongLogin () {
       return this.$store.getters.wrongLogin;
     },
+    //loading = true - запускает спинне ожидания ответа сервера
     loading () {//индикатор загрузки
       return this.$store.getters.loading;
     },
+    //email 
     email:{
       get() {
         return this.$store.state.email;
@@ -89,13 +111,20 @@ export default {
 </script>
 
 <style scoped>
+  .header {
+    background: repeating-radial-gradient(circle, var(--info-color), var(--accent-color) 10px, var(--accent-color) 10px, var(--accent-color) 20px);
+    grid-column: 1/15;
+    text-align: center;
+    color: var(--secondary-color);
+    /*background-image: radial-gradient(ellipse farthest-corner at right bottom, var(--primary-color) 0%, var(--accent-color) 50%, var(--info-color) 100%);*/
+  }
 
   .container {
     background: white;
     grid-column: 1/15;
     position: relative;
   }
-
+  
   .form {
     width: 400px;
      /*центрую форму относительно родительского блока*/
@@ -165,23 +194,6 @@ export default {
     display: block;
     text-align: center;
   }
-
-  button.__button {
-    box-sizing: border-box; /* Ширина блока с полями */
-    color: #fff; /* цвет текста */
-    user-select: none; /* убирать выделение текста */
-    padding: .0em 1.5em;/*.7em 1.5em; /* отступ от текста */
-    height: 40px;/*текст будет по центру*/
-    opacity: 0.9;
-    font-size: 16px;
-    border-radius: 4px;
-  } 
-  button.__button:hover { /* при наведении курсора мышки */
-    opacity: 1.0; 
-    } 
-  button.__button:active { /* при нажатии */
-    opacity: 0.5; 
-  } 
 
   /*анимация появления надписи Неправильный логин-пароль*/
   .fade-enter-active, .fade-leave-active {
