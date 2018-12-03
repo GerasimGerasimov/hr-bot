@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        pages: "groups", //login, groups, group
+        pages: "login", //login, groups, group
         //имя и пароль пользователя
         user:"Gerasim",
         email:"dialix@yandex.ru",
