@@ -1,6 +1,8 @@
 <template>
     <div class="search">
-        <div>&#x2315</div>
+        <div>
+            &#x2315
+        </div>
         <input
             type="search"
             placeholder="Поиск по критериям"
@@ -45,13 +47,19 @@ module.exports = {
 }
 
 .search div {
-    font-size: 32px;
-    color:black;
+    
+    height: 32px;
+    width: 32px;
+    margin: auto;
+    line-height: 30px;/*эта строчка помогла выровнять выровнять ЛУПУ по вертикали*/
+    text-align:center;
     background-color: var(--primary-color);
     border-style:none;
-    min-width: 32px;
-    text-align:center;
     border-right: 1px solid gray;
+    font-size: 32px;
+    color:black;
+    
+
 }
 
 .search input {

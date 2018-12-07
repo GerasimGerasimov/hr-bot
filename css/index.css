@@ -99,7 +99,7 @@ button.__button {
   height: 40px;/*текст будет по центру*/
   opacity: 0.9;
   font-size: 16px;
-  border-radius: 4px;
+  /*border-radius: 4px;*/
 } 
 button.__button:hover { /* при наведении курсора мышки */
   opacity: 1.0; 

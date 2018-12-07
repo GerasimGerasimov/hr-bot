@@ -1,0 +1,25 @@
+{
+  "user": {
+    "user": "Gerasim",
+    "mail": "dialix@yande.ru",
+    "constraints": "constraints ?",
+    "signature": "signature ?",
+    "groups": [
+      {
+        "group_link": "1",
+        "employer": "Yandex",
+        "position": "Java Developer",
+        "date": "11.12.2018"
+      },
+      {
+        "group_link": "2",
+        "employer": "Uber",
+        "position": "Node.JS Developer",
+        "date": "12.12.2018"
+      }
+    ],
+    "login": "Gerasim",
+    "email": "dialix@yandex.ru",
+    "password": "qwerty"
+  }
+}

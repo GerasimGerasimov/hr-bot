@@ -1,6 +1,15 @@
 /**
 * @description Форма опраций с Группами
+* JSON групп:Groups
+*   PK:	id
+*   FK:
+*        GroupName
+*        Owner
+*        Created
 *
+*        Candidates
+*        SearchParams
+*        MessageTemplate
 */
 
 <template>
@@ -8,11 +17,11 @@
         <div class="header">
             <div class="logo">
                 <span class="font-size-24 font-weight-900 ml20">HR-BOT</span>
-                <span class="font-size-16 ml20">Группы</span>
+                <span class="font-size-24 ml20">Группы</span>
             </div>
             <nav class="menu">
                 <search-input></search-input>
-                <button class="__button bgc-primary ml4 mr4">ВЫЙТИ</button>
+                <button class="__button bgc-primary ml4 mr4">ВЫХОД</button>
             </nav>
         </div>
     </div>
@@ -42,7 +51,7 @@ export default {
 
   /*Размечаю заголовок как flex-контейнер*/
   .header {
-    background-color: gray;
+    background-color: lightgray;
     display: flex;
     flex-wrap: wrap; /*перенос строки */
     justify-content: space-between; /*прижимает содержимое к краям */
@@ -51,7 +60,8 @@ export default {
 
   /*описываю оформление градиентом*/
   .header {
-    background: repeating-radial-gradient(circle, var(--info-color), var(--accent-color) 10px, var(--accent-color) 10px, var(--accent-color) 20px);
+    /*background: repeating-radial-gradient(circle, var(--info-color), var(--accent-color) 10px, var(--accent-color) 10px, var(--accent-color) 20px);
+    */
     grid-column: 1/15;
     color: var(--secondary-color);
   }

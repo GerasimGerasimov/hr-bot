@@ -7,6 +7,8 @@
 </template>
 
 <script>
+  //Object.definePrototype(Vue.prototype, '$AppTests', { value: AppTests });
+  //var AppTests = require('./tests/test.js');
   //Login Page
   import loginForm   from './components/login/loginForm.vue'
   //Group Page
@@ -20,13 +22,16 @@ export default {
     }
   },
   methods:{
-    setCounter(event){
-      console.log(event.target.value)
-      this.$store.state.counter = event.target.value
-    }
+    //setCounter(event){
+    //  console.log(event.target.value)
+    //  this.$store.state.counter = event.target.value
+    //}
   },
   computed: {
     page(){
+      //console.log("DEBUG_MODE", this.$AppTests().DEBUG_MODE);
+      //console.log("DEBUG_MODE", AppTests.DEBUG_MODE_TXT);//AppTests.DEBUG_MODE());
+      //Tests.data.DEBUG_MODE = true;
       return this.$store.getters.page;
     },
     loggedIn () {//loggedIn = true Пользователь вошёл в систему
