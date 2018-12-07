@@ -21,7 +21,10 @@
             </div>
             <nav class="menu">
                 <search-input></search-input>
-                <button class="__button bgc-primary ml4 mr4">ВЫХОД</button>
+                <button
+                    class="__button bgc-primary ml4 mr4"
+                    @click="logOut()"
+                >ВЫХОД</button>
             </nav>
         </div>
     </div>
@@ -34,6 +37,11 @@ export default {
     data (){
         return {
             msg:''
+        }
+    },
+    methods: {
+        logOut(){
+            this.$store.dispatch('logOut','');
         }
     },
     components: {

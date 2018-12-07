@@ -12,9 +12,9 @@ export default new Vuex.Store({
         user:"Gerasim",
         email:"dialix@yandex.ru",
         password:"qwerty",
+        //
         wrongLogin: false,//неправильный логин пароль
         loggedIn: false,//пользователь в системе
-        //
         loading:false,//индикатор загрузки
         //
         groups: [] //группы
@@ -45,6 +45,13 @@ export default new Vuex.Store({
         state.wrongLogin = false;
         state.loggedIn = true;
         state.pages = 'groups';//следующая страница - группы!
+      },
+      logOut(state, value) {//разлогинится
+        state.groups = [];
+        state.loading = false;
+        state.wrongLogin = false;
+        state.loggedIn = false;
+        state.pages = 'login';//следующая страница - группы!
       }
     },
     actions: {
@@ -104,6 +111,9 @@ export default new Vuex.Store({
               self.state.loggedIn = false;
               commit('updatePages', 'login');
           });
+      },
+      logOut({commit}, value) {//разлогинится
+        commit('logOut', '');
       }
     },
     getters: {
