@@ -1,20 +1,26 @@
 <template>
     <div class="search">
-        <div>
-            &#x2315
-        </div>
         <input
             type="search"
             placeholder="Поиск по критериям"
+            v-bind="$attrs"
+            v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)"
         >
+        <div>
+            &#x2315
+        </div>
     </div>
 </template>
 
 <script>
-module.exports = {
+//module.exports 
+export default {
+    inheritAttrs: false,
+    //props: ['value'],
     data: function (){
         return {
-            msg:''
+            value:''
         }
     }
 }
@@ -26,7 +32,7 @@ module.exports = {
     display: flex;
     justify-content: flex-start; /*прижимает содержимое к краям */
     align-items: center; /*выравнивает элементы по центру на вертикальной */
-    width: 200px;
+    width: 210px;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,1.0);
 }
 
@@ -55,7 +61,7 @@ module.exports = {
     text-align:center;
     background-color: var(--primary-color);
     border-style:none;
-    border-right: 1px solid gray;
+    /*border-right: 1px solid gray;*/
     font-size: 32px;
     color:black;
     
@@ -65,8 +71,10 @@ module.exports = {
 .search input {
     font-size: 16px;
     background-color: white;
-    min-width: 168px;
-    max-width: 168px;
+    min-width: 178px;
+    max-width: 178px;
+    margin-left: 2px;
+    padding-left: 2px;
 }
 
 /*при наведении на любой элемент в классе, меняю прозрачность*/

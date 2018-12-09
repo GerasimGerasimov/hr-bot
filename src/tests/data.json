@@ -16,6 +16,12 @@
         "employer": "Uber",
         "position": "Node.JS Developer",
         "date": "12.12.2018"
+      },
+      {
+        "group_link": "3",
+        "employer": "Mail.Ru",
+        "position": "DevOPS",
+        "date": "10.12.2018"
       }
     ],
     "login": "Gerasim",
