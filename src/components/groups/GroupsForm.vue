@@ -17,10 +17,12 @@
         <div class="header">
             <div class="logo">
                 <span class="font-size-24 font-weight-900 ml20">HR-BOT</span>
-                <span class="font-size-24 ml20">Группы</span>
             </div>
             <nav class="menu">
                 <search-input v-model="filterKey"></search-input>
+                <button
+                    class="__button bgc-success ml4 mr4"
+                >ДОБАВИТЬ КАМПАНИЮ</button>
                 <button
                     class="__button bgc-primary ml4 mr4"
                     @click="logOut()"
@@ -29,6 +31,7 @@
         </div>
         <div>
               <table>
+                <caption class="font-size-24 ml20">Группы</caption>
                 <thead>
                 <tr>
                     <th
@@ -154,7 +157,7 @@ export default {
                 data = data.filter(function(row) {
                 return Object.keys(row).some(function(key) {
                     return String(row[key]).toLowerCase().indexOf(filterKey) > -1
-                })
+                    })
                 })
             }
             //фильтрация по заголовку и направлению сортировки

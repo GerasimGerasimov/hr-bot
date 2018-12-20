@@ -64,7 +64,6 @@ export default {
     /*border-right: 1px solid gray;*/
     font-size: 32px;
     color:black;
-    
 
 }
 
@@ -73,8 +72,6 @@ export default {
     background-color: white;
     min-width: 178px;
     max-width: 178px;
-    margin-left: 2px;
-    padding-left: 2px;
 }
 
 /*при наведении на любой элемент в классе, меняю прозрачность*/

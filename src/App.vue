@@ -1,18 +1,19 @@
 <template>
   <div id="app" class="layout">
     
-    <login-form      v-if = "page == 'login'" ></login-form>
-    <group-form v-else-if = "page == 'groups'"></group-form>
+    <login-form        v-if = "page == 'login'" ></login-form>
+    <groups-form  v-else-if = "page == 'groups'"></groups-form>
+    <campany-form v-else-if = "page == 'campany'"></campany-form>
   </div>
 </template>
 
 <script>
-  //Object.definePrototype(Vue.prototype, '$AppTests', { value: AppTests });
-  //var AppTests = require('./tests/test.js');
   //Login Page
   import loginForm   from './components/login/loginForm.vue'
-  //Group Page
-  import GroupForm from './components/group/GroupForm.vue'
+  //Groups Page
+  import GroupsForm from './components/groups/GroupsForm.vue'
+  //Campany Page
+  import CampanyForm from './components/campany/CampanyForm.vue'
 
 export default {
   name: 'app',
@@ -40,20 +41,10 @@ export default {
   },
   components: {
     loginForm,
-    GroupForm
+    GroupsForm,
+    CampanyForm
   }
 }
-
-/*
-    <input
-      type="email"
-      placeholder="e-mail"
-      id="email"
-      v-model="counter"
-      @change=setCounter($event)
-    >
-*/
-
 </script>
 
 <style>

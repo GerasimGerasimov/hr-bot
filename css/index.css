@@ -81,6 +81,9 @@
     padding: 20px;
   }
 
+  .pt8- {
+    padding-top: 8px;
+  }
 /*Шрифты*/
 .font-size-12 {font-size: 12px;} 
 .font-size-16 {font-size: 16px;} 
@@ -88,6 +91,7 @@
 .font-size-32 {font-size: 32px;} 
 .font-size-48 {font-size: 48px;}
 
+.font-weight-600 {font-weight: 600;}
 .font-weight-900 {font-weight: 900;}
 
 /*Кнопки*/

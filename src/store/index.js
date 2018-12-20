@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        pages: "login", //login, groups, group
+        pages: "login", //login, groups, campany
         //имя и пароль пользователя
         user:"Gerasim",
         email:"dialix@yandex.ru",
@@ -99,10 +99,13 @@ export default new Vuex.Store({
             if (data.user === 'User with such name not found')  throw new Error('User with such name not found');
             if (data.user === 'Incorrect password')             throw new Error('Incorrect password');
             //Данные приняты. Если есть поле группы - загружаю группы
-            if (typeof data['groups'] !== "undefined") {
-              console.log("data.groups:",data.groups);
-              commit('enterToGroups',data.groups);
-            }
+            if (typeof data['Groups'] != "undefined") {
+              console.log("data.groups:",data.Groups);
+              commit('enterToGroups',data.Groups);
+            } else {
+              console.log("data.groups: empty");
+              commit('enterToGroups',[]);
+            } 
           })
           .catch((error) => {//отрабатываю ошибку коннекта
               console.log('request failed', error);
