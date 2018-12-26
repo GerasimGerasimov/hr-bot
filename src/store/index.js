@@ -17,7 +17,8 @@ export default new Vuex.Store({
         loggedIn: false,//пользователь в системе
         loading:false,//индикатор загрузки
         //
-        groups: [] //группы
+        groups: [], //группы
+        campany: {} //кампания
     },
     mutations: {
       updatePages(state, page){
@@ -45,6 +46,11 @@ export default new Vuex.Store({
         state.wrongLogin = false;
         state.loggedIn = true;
         state.pages = 'groups';//следующая страница - группы!
+      },
+      enterToCampany(state, value) {//вход в Кампанию
+        console.log('enterToCampany:', value);
+        state.campany= value;//загрузить массив групп
+        state.pages = 'campany';//следующая страница - кампания!
       },
       logOut(state, value) {//разлогинится
         state.groups = [];

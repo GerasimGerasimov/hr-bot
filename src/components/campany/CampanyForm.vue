@@ -20,47 +20,35 @@
                 <div class="line" style="width:90%"></div>
                 <div class="utf-icon-button font-size-24 font-weight-900" role="button" @click="tougleCollapse()">{{getCollapseArrow()}}</div>
                 <div class="line" style="width:16px"></div>
-            </div>
-            <div class="value-block disactive ">
-                <input type="label" class="font-size-16 font-weight-600" value="Ищем">
-                <textarea class="font-size-12" readonly>Москва, Санкт-Петербург, Bamboo, Java, Swift, Expresso, XCUITest, white box testing, integration testing, API testing, Fluent English   
-                </textarea>
-            </div>       
+            </div> 
             <div v-if="!collapse">     
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Наниматель">
-                    <input type="text" value="Яндекс отдел тестирования">
+                    <input type="text" :value="Employer">
                 </div>
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Должность">
-                    <input type="text" value="Ведущий инженер по автоматизации тестирования / Senior Test Automation Engineer (Java)">
+                    <input type="text" :value="Position">
                 </div>  
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Опыт">
-                    <textarea class="font-size-16"> Bamboo, Java, Swift, Expresso, XCUITest, white box testing, integration testing, API testing, Fluent English  
-                    </textarea>
+                    <textarea class="font-size-16" v-model="Skills"></textarea>
                 </div>                 
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Сообщение">
-                    <textarea class="font-size-12">
-                    Здравствуйте $CandidateName!
-                    Я рекрутёр $UserName.
-                    Ищу специалиста для работы в $Owner на должности $Position
-                    Прошу принять моё приглашение
-                    С уважением,  $UserName."   
-                    </textarea>
+                    <textarea class="font-size-12">{{MessageTemplate}}</textarea>
                 </div>      
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Города">
-                    <input type="text" value="Москва, Нижний Новгород">
+                    <input type="text" :value="Location">
                 </div>        
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Круги">
-                    <input type="text" value="1, 2">
+                    <input type="text" :value="Circles">
                 </div>    
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Исключения">
-                    <input type="text" value="HR, Директор, Manager, CEO">
+                    <input type="text" :value="Exceptions">
                 </div>   
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="">
@@ -68,7 +56,13 @@
                             class="__button bgc-success ml4 mr4"
                     >ВЫПОЛНИТЬ ПОИСК &#x2315</button>  
                 </div>    
-            </div>                                          
+            </div>
+            <div class="value-block disactive ">
+                <input type="label" class="font-size-16 font-weight-600" value="Ищем">
+                <textarea readonly ref="textarea" class="font-size-12 white-space-pre" 
+                    :style="{ height: myTextAreaHeight }"
+                    v-model="Summary"></textarea>
+            </div>                                                         
         </div>
         <div class="campany-form pt8">
             <div class="menu">
@@ -105,7 +99,28 @@ export default {
             tabs: { 
                 active: 0,
                 Captions:['Избраные', 'Все','Ещё какие-то','Ф.И.О','Отборные!']
-            }
+            },
+            myTextArea:{},
+            myTextAreaHeight: "auto"
+        }
+    },
+    mounted(){
+        //только после mounted открывается доступ к элементам HTML описанных в $refs
+        console.log('mounted');
+        console.log('setTextAreaHeight:',this.$refs.textarea);
+        this.myTextArea = this.$refs.textarea;
+        this.myTextAreaHeight = this.myTextArea.scrollHeight +"px"; 
+    },
+    watch: {
+        Summary: function(){
+            this.myTextAreaHeight = "auto";//сначала ставлю высоту автоматическую
+                                           //чтобы высота уменьшилась! если высота текста
+                                           //уменьшилась
+            //а потом, сделаю высоту такой какая требуется (вычисленная из scrollHeight)
+            this.$nextTick(function() {
+                console.log('nextTick.scrollHeight:',this.myTextArea.scrollHeight);
+                this.myTextAreaHeight = this.myTextArea.scrollHeight +"px";
+            })
         }
     },
     methods: {
@@ -122,6 +137,15 @@ export default {
             this.tabs.active = index;
             console.log("setSheetActive", this.tabs.active);
         }
+        /*
+        //высота textArea
+        setTextAreaHeight(){
+            console.log('setTextAreaHeight:',this.$refs);
+            console.log('setTextAreaHeight:',this.$refs.textarea);
+            console.log('setTextAreaHeight:',this.$refs[0]);
+            return 'height=100px';
+        },
+        */
     },
     computed: {
         getSheets(){
@@ -134,8 +158,83 @@ export default {
                 a.push(sheet);
             });
             console.log(a);
-            return a;//this.tabs.Captions;
+            return a;
         },
+        Summary:{
+            get() {
+                let res = '';
+                res +=this.$store.state.campany.hasOwnProperty('Employer')?(this.$store.state.campany.Employer+'\n'):'';
+                res +=this.$store.state.campany.hasOwnProperty('Position')?(this.$store.state.campany.Position+'\n'):'';
+                res +=this.$store.state.campany.hasOwnProperty('Skills')?(this.$store.state.campany.Skills+'\n'):'';
+                res +=this.$store.state.campany.hasOwnProperty('Location')?(this.$store.state.campany.Location+'\n'):'';
+                return res;
+            },
+            set(value){
+            }
+        },
+        getTextAreaHeight(){
+            let s = this.myTextArea.scrollHeight;
+            console.log('getTextAreaHeight.s:',s);       
+            return s;
+        },
+        Employer:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Employer')?this.$store.state.campany.Employer:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        Position:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Position')?this.$store.state.campany.Position:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        Skills:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Skills')?this.$store.state.campany.Skills:''; 
+            },
+            set (value) {
+                this.$store.state.campany.Skills = value;
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        MessageTemplate:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('MessageTemplate')?this.$store.state.campany.MessageTemplate:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        Location:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Location')?this.$store.state.campany.Location:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        Circles:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Circles')?this.$store.state.campany.Circles:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        },
+        Exceptions:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Exceptions')?this.$store.state.campany.Exceptions:''; 
+            },
+            set (value) {
+                //this.$store.commit('updateEmail', value);
+            }
+        }         
+         
     },
     filters: {
         capitalize: function (str) {
@@ -270,12 +369,13 @@ export default {
     border: none;
     outline: none;/*удаляю обводку браузера*/
     resize: none;/*удалаю элемент изменения размера в ПН углу*/
-    height: 100%;
     padding-bottom: 2px;
     padding-top: 2px;
-    white-space: normal;
     /**/
     box-shadow: none;
+    /**/
+    white-space: pre-line; /* Учитываются все пробелы и переносы */ 
+    word-wrap: break-word;
 }
 
 .disactive {
@@ -328,7 +428,10 @@ export default {
     flex: 1;
 }
 
-
+.white-space-pre {
+    white-space: pre-line; /* Учитываются все пробелы и переносы */ 
+    word-wrap: break-word;
+}
 
 
 </style>

@@ -50,7 +50,8 @@
                 </thead>
                 <tbody>
                 <tr v-for="entry in filteredData">
-                    <td v-for="key in getColumnsName">
+                    <td v-for="key in getColumnsName"
+                        @click="goToCompanyPage(entry)">
                         {{entry[key]}}
                     </td>
                 </tr>
@@ -66,34 +67,43 @@ import SearchInput from '../ui/SearchInput.vue'
 export default {
     data (){
         return {
-            columns: ['employer', 'position', 'date', 'status'],
+            columns: ['Employer', 'Position', 'Created', 'Location', 'Status'],
             sortKey: '',
             sortDirections:'up',//'down'
             filterKey: '',
             sortOrders:{},
             SortOrders:[
-                {   key: 'employer',  //колонка
+                {   key: 'Employer',  //колонка
                     source: true,//если true то сортировка по этой колонке
                     dir:true     //направление сортировки
                 },
-                {   key: 'position',       //колонка
+                {   key: 'Position',       //колонка
                     source: false,//если true то сортировка по этой колонке
                     dir: true      //направление сортировки
                 },
-                {   key: 'date',      //колонка
+                {   key: 'Created',      //колонка
                     source: false,//если true то сортировка по этой колонке
                     dir:true      //направление сортировки
                 },
-                {   key: 'status',       //колонка
+                {   key: 'Location',       //колонка
                     source: false,//если true то сортировка по этой колонке
                     dir:true      //направление сортировки
-                }                 
+                },
+                {   key: 'Status',       //колонка
+                    source: false,//если true то сортировка по этой колонке
+                    dir:true      //направление сортировки
+                }       
+
             ]
         }
     },
     methods: {
         logOut(){
             this.$store.dispatch('logOut','');
+        },
+        goToCompanyPage(value){
+            console.log('goToCompanyPage:',value);
+            this.$store.commit('enterToCampany', value);
         },
         sortBy (key) {
             this.sortKey = key;
