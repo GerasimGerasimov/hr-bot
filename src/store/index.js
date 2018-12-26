@@ -29,15 +29,12 @@ export default new Vuex.Store({
       },
       updateEmail(state, value){
         state.email = value;
-        console.log("updateEmail",value)
       },
       updatePassword(state, value){
         state.password = value;
-        console.log("updatePasswor",value)
       },
       updateGroups(state, value){
         state.groups = value;
-        //console.log("updateGroups:",value)
       },
       enterToGroups(state, value) {//вход в приложение
         state.loading = false;
@@ -58,6 +55,30 @@ export default new Vuex.Store({
         state.wrongLogin = false;
         state.loggedIn = false;
         state.pages = 'login';//следующая страница - группы!
+      },
+      backToGroups(state,value){
+        state.pages = 'groups';//следующая страница - группы!
+      },
+      updateGroupEmployer(state, value){
+        state.campany.Employer = value;
+      },
+      updateGroupPosition(state, value){
+        state.campany.Position = value;
+      },
+      updateGroupSkills(state, value){
+        state.campany.Skills = value;
+      },
+      updateGroupMessageTemplate(state, value){
+        state.campany.MessageTemplate = value;
+      },
+      updateGroupLocation(state, value){
+        state.campany.Location = value;
+      },
+      updateGroupCircles(state, value){
+        state.campany.Circles = value;
+      },
+      updateGroupExceptions(state, value){
+        state.campany.Exceptions = value;
       }
     },
     actions: {
@@ -123,6 +144,9 @@ export default new Vuex.Store({
       },
       logOut({commit}, value) {//разлогинится
         commit('logOut', '');
+      },
+      backToGroups({commit}, value){
+        commit('backToGroups', '');//следующая страница - группы
       }
     },
     getters: {

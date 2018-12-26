@@ -7,6 +7,7 @@
             <nav class="menu">
                 <button
                     class="__button bgc-success ml4 mr4"
+                    @click="backToGroups()"
                 >ВЕРНУТЬСЯ К ГРУППАМ</button>
                 <button
                     class="__button bgc-primary ml4 mr4"
@@ -18,17 +19,21 @@
             <div class="menu">
                 <p class="menu-text font-size-16 font-weight-600">Настройки кампании</p>
                 <div class="line" style="width:90%"></div>
-                <div class="utf-icon-button font-size-24 font-weight-900" role="button" @click="tougleCollapse()">{{getCollapseArrow()}}</div>
+                <div class="utf-icon-button font-size-24 font-weight-900" role="button"
+                    @click="tougleCollapse()">
+                    {{getCollapseArrow()}}
+                </div>
                 <div class="line" style="width:16px"></div>
             </div> 
+            <transition name="fade">
             <div v-if="!collapse">     
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Наниматель">
-                    <input type="text" :value="Employer">
+                    <input type="text" v-model="Employer">
                 </div>
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Должность">
-                    <input type="text" :value="Position">
+                    <input type="text" v-model="Position">
                 </div>  
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Опыт">
@@ -40,15 +45,15 @@
                 </div>      
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Города">
-                    <input type="text" :value="Location">
+                    <input type="text" v-model="Location">
                 </div>        
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Круги">
-                    <input type="text" :value="Circles">
+                    <input type="text" v-model="Circles">
                 </div>    
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Исключения">
-                    <input type="text" :value="Exceptions">
+                    <input type="text" v-model="Exceptions">
                 </div>   
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="">
@@ -57,6 +62,7 @@
                     >ВЫПОЛНИТЬ ПОИСК &#x2315</button>  
                 </div>    
             </div>
+            </transition>
             <div class="value-block disactive ">
                 <input type="label" class="font-size-16 font-weight-600" value="Ищем">
                 <textarea readonly ref="textarea" class="font-size-12 white-space-pre" 
@@ -127,6 +133,9 @@ export default {
         logOut(){
             this.$store.dispatch('logOut','');
         },
+        backToGroups(){
+            this.$store.dispatch('backToGroups','');
+        },
         tougleCollapse(){
             this.collapse = !this.collapse;
         },
@@ -182,7 +191,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Employer')?this.$store.state.campany.Employer:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupEmployer', value);
             }
         },
         Position:{
@@ -190,7 +199,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Position')?this.$store.state.campany.Position:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupPosition', value);
             }
         },
         Skills:{
@@ -198,8 +207,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Skills')?this.$store.state.campany.Skills:''; 
             },
             set (value) {
-                this.$store.state.campany.Skills = value;
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupSkills', value);
             }
         },
         MessageTemplate:{
@@ -207,7 +215,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('MessageTemplate')?this.$store.state.campany.MessageTemplate:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupMessageTemplate', value);
             }
         },
         Location:{
@@ -215,7 +223,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Location')?this.$store.state.campany.Location:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupLocation', value);
             }
         },
         Circles:{
@@ -223,7 +231,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Circles')?this.$store.state.campany.Circles:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupCircles', value);
             }
         },
         Exceptions:{
@@ -231,7 +239,7 @@ export default {
                 return this.$store.state.campany.hasOwnProperty('Exceptions')?this.$store.state.campany.Exceptions:''; 
             },
             set (value) {
-                //this.$store.commit('updateEmail', value);
+                this.$store.commit('updateGroupExceptions', value);
             }
         }         
          
@@ -433,5 +441,12 @@ export default {
     word-wrap: break-word;
 }
 
-
+/*анимация появления/скрытия основных полей формы*/
+.fade-enter-active, .fade-leave-active {
+  transition: all .25s linear;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0) scaleX(0);
+}
 </style>
