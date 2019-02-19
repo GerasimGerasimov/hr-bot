@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-//import Urls from './urls.js'
 var URLs = require('./urls.js');
 
 Vue.use(Vuex)
@@ -36,10 +35,16 @@ export default new Vuex.Store({
       updateGroups(state, value){
         state.groups = value;
       },
-      enterToGroups(state, value) {//вход в приложение
+      /**
+       * enterToGroups
+       * @param {*} state 
+       * @param {*} value - state.groups: [] - массив группы
+       */
+      enterToGroups(state, value) {//Группы загружены, требуется их отобразить
         state.loading = false;
         console.log('enterToGroups:', value);
         state.groups = value;//загрузить массив групп
+        getGroupStatus(state.groups);//опредедить статусы загруженных групп
         state.wrongLogin = false;
         state.loggedIn = true;
         state.pages = 'groups';//следующая страница - группы!
@@ -167,6 +172,36 @@ export default new Vuex.Store({
       }
     }
 })
+
+      /**
+       * После загрузки групп, надо определить их статус:
+       *  1) New - ещё не нажата кнопка "выполнить поиск кандидатов"
+       *  2) Search - робот ищет кандидатов. Признаки:
+       *              1. Поле SearchParams не пустое
+       *              2. Поле Candidates пустое (не нашёл ещё никого)
+       *  3) Active - кандидаты найдены (Поле Candidates содержит список id кандидатов)
+       *              на этом этапе работает HR с предоставленной выборкой
+       *  4) Done - кампания закрыта, требуемые кадры наняты 
+       * 
+       * @param {*} groups массив групп (кампаний)
+       */
+      var getGroupStatus = (groups) =>{
+        groups.forEach(element => {
+          if ((element.SearchParams.length != 0) &&
+              (element.Candidates.length == 0)) {
+                element.Status = "Search";
+                return true;
+              }
+          if (element.Candidates.length != 0) {
+            element.Status = `Active: ${element.Candidates.length}`;
+            return true;
+          }
+          if (element.Visible == false) {
+            element.Status = "Done";
+          }
+          element.Status = "New";//значение по умолчанию
+        });
+      }
 
 /*
         setTimeout(() => {

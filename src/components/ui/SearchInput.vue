@@ -14,10 +14,8 @@
 </template>
 
 <script>
-//module.exports 
 export default {
     inheritAttrs: false,
-    //props: ['value'],
     data: function (){
         return {
             value:''

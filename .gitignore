@@ -14,3 +14,4 @@ docs
 *.njsproj
 *.sln
 /node_modules/*
+bak

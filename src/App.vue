@@ -19,7 +19,7 @@ export default {
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to HR-BOT Vue.js App'
     }
   },
   methods:{

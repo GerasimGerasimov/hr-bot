@@ -77,42 +77,33 @@
                 <div class="utf-icon-button font-size-32 font-weight-900" role="button">&#8801</div>
                 <div class="line" style="width:16px"></div>
             </div>
-            <!-- Выделить в компонент!-->
-            <div class="persons-tab-menu">
-                <slot v-for="(sheet, index) in getSheets" >
-                    <div class="tabsheet"
-                         :class="{active:sheet.active, nonactive:!sheet.active}"
-                          @click="setSheetActive(index)"
-                    >
-                        {{sheet.caption}}
-                    </div>
-                    <div class="tabbreak"></div>
-                </slot>
-                 <div class="tabbreak flex-1"></div>
-            </div>
+            <tab-sheets :Captions = "tabSheetsEmployersSelect.Captions"
+                        :InitialTab = "0"
+                        @change-tab-index = "onChTabSheetsEmployersIndex"
+            ></tab-sheets>
             <div> Таблица </div>
         </div>
     </div>
 </template>
 
 <script>
-//import SearchInput from '../ui/SearchInput.vue'
+import TabSheets from '../ui/TabSheets.vue'
 
 export default {
     data (){
         return {
             collapse: false,
-            tabs: { 
-                active: 0,
-                Captions:['Избраные', 'Все','Ещё какие-то','Ф.И.О','Отборные!']
-            },
             myTextArea:{},
-            myTextAreaHeight: "auto"
+            myTextAreaHeight: "auto",
+            selectedTabSheet: {},
+            tabSheetsEmployersSelect: {
+                Captions:['Избраные', 'Все', 'Ещё какие-то','Ф.И.О','Отборные!'], //данные TabSheets
+                TabIndex:0
+            }
         }
     },
     mounted(){
         //только после mounted открывается доступ к элементам HTML описанных в $refs
-        console.log('mounted');
         console.log('setTextAreaHeight:',this.$refs.textarea);
         this.myTextArea = this.$refs.textarea;
         this.myTextAreaHeight = this.myTextArea.scrollHeight +"px"; 
@@ -130,6 +121,9 @@ export default {
         }
     },
     methods: {
+        onChTabSheetsEmployersIndex(data){
+            console.log(`onChTabSheetsEmployersIndex:${data}`)
+        },
         logOut(){
             this.$store.dispatch('logOut','');
         },
@@ -141,33 +135,11 @@ export default {
         },
         getCollapseArrow () {
             return (this.collapse)?'\u25BC':'\u25B2';
-        },
-        setSheetActive(index) {
-            this.tabs.active = index;
-            console.log("setSheetActive", this.tabs.active);
         }
-        /*
-        //высота textArea
-        setTextAreaHeight(){
-            console.log('setTextAreaHeight:',this.$refs);
-            console.log('setTextAreaHeight:',this.$refs.textarea);
-            console.log('setTextAreaHeight:',this.$refs[0]);
-            return 'height=100px';
-        },
-        */
     },
     computed: {
-        getSheets(){
-            let a=[];
-            this.tabs.Captions.forEach((item,index)=>{
-                console.log(item, index);
-                let sheet = {}
-                    sheet.caption = item;
-                    sheet.active = (this.tabs.active == index)?true:false;
-                a.push(sheet);
-            });
-            console.log(a);
-            return a;
+        getTabIndex() {
+            console.log('watch:selectedTabSheet:',this.tabSheetsEmployersSelect.TabIndex)
         },
         Summary:{
             get() {
@@ -250,6 +222,7 @@ export default {
         }
     },
     components: {
+        TabSheets
     }
 }
 
@@ -389,51 +362,6 @@ export default {
 .disactive {
     color: var(--secondary-color);
     opacity: 0.8;
-}
-
-.persons-tab-menu {
-    display: flex;
-    align-items: flex-end;
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 0px;
-    padding-bottom: 12px;
-    line-height: 24px;
-}
-
-.persons-tab-menu div.tabsheet {
-    cursor: pointer;
-    user-select: none;
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.persons-tab-menu .active  {
-    border-top: 2px solid var(--warning-color);
-    border-bottom: 1px solid transparent;
-    background-color: var(--primary-color);
-    color: #fff; /* цвет текста */
-    opacity: 0.9;
-}
-
-.persons-tab-menu .nonactive  {
-    border: 1px solid var(--accent-color);
-    opacity: 0.5;
-}
-.persons-tab-menu div.tabbreak {
-    margin-left: 0px;
-    margin-right: 0px;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    border-bottom: 1px solid var(--accent-color);
-    width: 2px;
-}
-
-.flex-1 {
-    flex: 1;
 }
 
 .white-space-pre {
