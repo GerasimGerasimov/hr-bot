@@ -1,8 +1,8 @@
 /*https://monsterlessons.com/project/lessons/peredaem-dannye-iz-child-v-parent-v-vue*/
 <template>
     <div class="tabsheets">
-        <slot v-for="(sheet, index) in Captions" >
-            <div class="tabsheet"
+        <slot v-for="(sheet, index) in Captions">
+            <div class="tabsheet" :key="sheet"
                 :class="{active:(tab==index), nonactive:(tab!=index)}"
                 @click="setSheetActive(index)"
                 >
