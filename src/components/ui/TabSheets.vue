@@ -1,12 +1,12 @@
 /*https://monsterlessons.com/project/lessons/peredaem-dannye-iz-child-v-parent-v-vue*/
 <template>
     <div class="tabsheets">
-        <slot v-for="(sheet, index) in getSheets" >
+        <slot v-for="(sheet, index) in Captions" >
             <div class="tabsheet"
                 :class="{active:(tab==index), nonactive:(tab!=index)}"
                 @click="setSheetActive(index)"
                 >
-                {{sheet.caption}}
+                {{sheet}}
             </div>
             <div class="tabbreak"></div>
         </slot>
@@ -29,9 +29,9 @@ export default {
                 type: Number,
                 default: 0
             },
-            onChangeTabIndex: { 
-                type: Function,
-                default: function(data) {console.log('default:onChangeTabIndex:',data)}
+            onChangeTabIndex: {//Функция переданная из Родителя для вызова при клике на заголовок элемента TabSheet
+                type: Function,//в параметре TabIndex в Родитель передаётся номер заголовка
+                default: function(TabIndex) {console.log('default:onChangeTabIndex:',TabIndex)}
             }
     },
     data: function (){
@@ -46,19 +46,6 @@ export default {
         setSheetActive(index) {
             this.tab = index
             this.onChangeTabIndex(this.tab)
-        }
-    },
-    computed: {
-        getSheets(){
-            let a=[];
-            this.Captions.forEach((item,index)=>{
-                console.log(item, index);
-                let sheet = {}
-                    sheet.caption = item;
-                a.push(sheet);
-            });
-            console.log(a);
-            return a;
         }
     }
 }
@@ -76,7 +63,7 @@ export default {
     line-height: 24px;
 }
 
-.tabsheets div.tabsheet {
+.tabsheet {
     cursor: pointer;
     user-select: none;
     padding-left: 8px;
@@ -85,7 +72,7 @@ export default {
     margin-right: 0px;
 }
 
-.tabsheets .active  {
+.active  {
     border-top: 2px solid var(--warning-color);
     border-bottom: 1px solid transparent;
     background-color: var(--primary-color);
@@ -93,11 +80,12 @@ export default {
     opacity: 0.9;
 }
 
-.tabsheets .nonactive  {
+.nonactive  {
     border: 1px solid var(--accent-color);
     opacity: 0.5;
 }
-.tabsheets div.tabbreak {
+
+.tabbreak {
     margin-left: 0px;
     margin-right: 0px;
     border-left: none;
