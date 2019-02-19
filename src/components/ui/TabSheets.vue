@@ -28,6 +28,10 @@ export default {
             value: {//номер выбранной вкладки (по умолчанию)
                 type: Number,
                 default: 0
+            },
+            onChangeTabIndex: { 
+                type: Function,
+                default: function(data) {console.log('default:onChangeTabIndex:',data)}
             }
     },
     data: function (){
@@ -41,12 +45,11 @@ export default {
     methods: {
         setSheetActive(index) {
             this.tab = index
-            this.$emit('change-tab-index', this.tab)
+            this.onChangeTabIndex(this.tab)
         }
     },
     computed: {
         getSheets(){
-            //return this.Captions
             let a=[];
             this.Captions.forEach((item,index)=>{
                 console.log(item, index);

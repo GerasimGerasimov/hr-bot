@@ -79,7 +79,7 @@
             </div>
             <tab-sheets :Captions = "tabSheetsEmployersSelect.Captions"
                         :InitialTab = "0"
-                        @change-tab-index = "onChTabSheetsEmployersIndex"
+                        :onChangeTabIndex = "onChTabSheetsEmployersIndex"
             ></tab-sheets>
             <div> Таблица </div>
         </div>
@@ -121,8 +121,9 @@ export default {
         }
     },
     methods: {
-        onChTabSheetsEmployersIndex(data){
-            console.log(`onChTabSheetsEmployersIndex:${data}`)
+        //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
+        onChTabSheetsEmployersIndex(index){
+            console.log(`onChTabSheetsEmployersIndex:${index}`)
         },
         logOut(){
             this.$store.dispatch('logOut','');
