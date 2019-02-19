@@ -8,7 +8,7 @@
                 >
                 {{sheet}}
             </div>
-            <div class="tabbreak"></div>
+            <div class="tabbreak" :key="index"></div>
         </slot>
         <div class="tabbreak flex-1"></div>
     </div>
