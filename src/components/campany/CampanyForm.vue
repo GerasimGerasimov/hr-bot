@@ -41,7 +41,7 @@
                 </div>                 
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Сообщение">
-                    <textarea class="font-size-12">{{MessageTemplate}}</textarea>
+                    <textarea class="font-size-12" v-model="MessageTemplate"></textarea>
                 </div>      
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Города">
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import TabSheets from '../ui/TabSheets.vue'
+import TabSheets from '../ui/VTabSheets.vue'
 
 export default {
     data (){
@@ -376,6 +376,6 @@ export default {
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
-  transform: scaleY(0) scaleX(0);
+  transform: scaleY(0)  scaleX(0);
 }
 </style>

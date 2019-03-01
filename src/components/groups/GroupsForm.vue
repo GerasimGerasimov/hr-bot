@@ -35,24 +35,24 @@
                 <thead>
                 <tr>
                     <th
-                        v-for="key in getColumnsName"
-                        @click="sortBy(key)"
-                        :class="{ active: sortKey == key }"
+                        v-for="item in getColumnsName" :key="item"
+                        @click="sortBy(item)"
+                        :class="{ active: sortKey == item }"
                     >
-                    {{ key | capitalize }}
+                    {{ item | capitalize }}
                     <span
                         class="arrow"
-                        :class="getSortDirections(key)"
+                        :class="getSortDirections(item)"
                     >
                     </span>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="entry in filteredData">
-                    <td v-for="key in getColumnsName"
+                <tr v-for="entry in filteredData" :key="entry.filterKey">
+                    <td v-for="columnName in getColumnsName" :key="columnName"
                         @click="goToCompanyPage(entry)">
-                        {{entry[key]}}
+                        {{entry[columnName]}}
                     </td>
                 </tr>
                 </tbody>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import SearchInput from '../ui/SearchInput.vue'
+import SearchInput from '../ui/VSearchInput.vue'
 
 export default {
     data (){
@@ -145,11 +145,6 @@ export default {
                 }
             })
             return dir;
-            /*
-            var s = (this.sortDirections == 'up') ? 'asc' : 'dsc'
-            console.log('getSortOrders:',key, s)
-            return s
-            */
         },
     },
 
