@@ -65,9 +65,11 @@
             </transition>
             <div class="value-block disactive ">
                 <input type="label" class="font-size-16 font-weight-600" value="Ищем">
-                <textarea readonly ref="textarea" class="font-size-12 white-space-pre" 
-                    :style="{ height: myTextAreaHeight }"
-                    v-model="Summary"></textarea>
+                <auto-height-text-area 
+                    class="auto-height-text-area font-size-12 white-space-pre"
+                    :text = "Summary"
+                    >
+                </auto-height-text-area>
             </div>                                                         
         </div>
         <div class="campany-form pt8">
@@ -87,37 +89,18 @@
 </template>
 
 <script>
+import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
 
 export default {
     data (){
         return {
             collapse: false,
-            myTextArea:{},
-            myTextAreaHeight: "auto",
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
                 Captions:['Избраные', 'Все', 'Ещё какие-то','Ф.И.О','Отборные!'], //данные TabSheets
                 TabIndex:0
             }
-        }
-    },
-    mounted(){
-        //только после mounted открывается доступ к элементам HTML описанных в $refs
-        console.log('setTextAreaHeight:',this.$refs.textarea);
-        this.myTextArea = this.$refs.textarea;
-        this.myTextAreaHeight = this.myTextArea.scrollHeight +"px"; 
-    },
-    watch: {
-        Summary: function(){
-            this.myTextAreaHeight = "auto";//сначала ставлю высоту автоматическую
-                                           //чтобы высота уменьшилась! если высота текста
-                                           //уменьшилась
-            //а потом, сделаю высоту такой какая требуется (вычисленная из scrollHeight)
-            this.$nextTick(function() {
-                console.log('nextTick.scrollHeight:',this.myTextArea.scrollHeight);
-                this.myTextAreaHeight = this.myTextArea.scrollHeight +"px";
-            })
         }
     },
     methods: {
@@ -148,16 +131,11 @@ export default {
                 res +=this.$store.state.campany.hasOwnProperty('Employer')?(this.$store.state.campany.Employer+'\n'):'';
                 res +=this.$store.state.campany.hasOwnProperty('Position')?(this.$store.state.campany.Position+'\n'):'';
                 res +=this.$store.state.campany.hasOwnProperty('Skills')?(this.$store.state.campany.Skills+'\n'):'';
-                res +=this.$store.state.campany.hasOwnProperty('Location')?(this.$store.state.campany.Location+'\n'):'';
+                res +=this.$store.state.campany.hasOwnProperty('Location')?(this.$store.state.campany.Location):'';
                 return res;
             },
             set(value){
             }
-        },
-        getTextAreaHeight(){
-            let s = this.myTextArea.scrollHeight;
-            console.log('getTextAreaHeight.s:',s);       
-            return s;
         },
         Employer:{
             get() {
@@ -223,6 +201,7 @@ export default {
         }
     },
     components: {
+        AutoHeightTextArea,
         TabSheets
     }
 }
@@ -346,16 +325,16 @@ export default {
     box-shadow: 0 2px 5px 0 rgba(0,0,0,0.1); /* Параметры тени */
 }
 
-.value-block textarea:read-only{
+/*.value-block textarea:read-only{*/
+.auto-height-text-area {
     flex: 1;
+    height: 100%;
     border: none;
     outline: none;/*удаляю обводку браузера*/
     resize: none;/*удалаю элемент изменения размера в ПН углу*/
     padding-bottom: 2px;
     padding-top: 2px;
-    /**/
     box-shadow: none;
-    /**/
     white-space: pre-line; /* Учитываются все пробелы и переносы */ 
     word-wrap: break-word;
 }

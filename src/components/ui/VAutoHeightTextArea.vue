@@ -1,14 +1,10 @@
-/*https://monsterlessons.com/project/lessons/peredaem-dannye-iz-child-v-parent-v-vue*/
 <template>
-    <div class="tabsheets">
-        <textarea
-            readonly
-            class="font-size-12 white-space-pre" 
-            ref="textarea"
-            :style="{ height: myTextAreaHeight }"
-            v-model="Summary">
-        </textarea>
-    </div>
+    <textarea
+        ref="textarea"
+        v-bind="$attrs"
+        :style="{ height: TextAreaHeight }"
+        v-model="Summary">
+    </textarea>
 </template>
 
 
@@ -16,84 +12,52 @@
 export default {
     inheritAttrs: false,
     props: {
-            Captions: { //названия вкладок
-                type: Array,
+            text: { //содержимое
+                type: String,
                 default: function(){
-                    return []
+                    return 'VAutoHeightTextArea.vue'
                 }
             },
-            value: {//номер выбранной вкладки (по умолчанию)
-                type: Number,
-                default: 0
-            },
-            onChangeTabIndex: {//Функция переданная из Родителя для вызова при клике на заголовок элемента TabSheet
-                type: Function,//в параметре TabIndex в Родитель передаётся номер заголовка
-                default: function(TabIndex) {console.log('default:onChangeTabIndex:',TabIndex)}
+            onChangeText: {//Функция переданная из Родителя для вызова при изменении текста (если не readonly)
+                type: Function,//в параметре value в Родитель передаётся содержимое textarea
+                default: function(value) {console.log('default:onChangeText:',value)}
             }
     },
-    data: function (){
+    data (){
         return {
-            tab: this.value,//беру начальное значение, потом его можифицирую
-            tabs: { 
-                active: 0,
-            }
+            TextArea:{},
+            TextAreaHeight: "auto"
         }
     },
-    methods: {
-        setSheetActive(index) {
-            this.tab = index
-            this.onChangeTabIndex(this.tab)
+    mounted(){
+        //только после mounted открывается доступ к элементам HTML описанных в $refs
+        console.log('setTextAreaHeight:',this.$refs.textarea);
+        this.TextArea = this.$refs.textarea;
+        this.TextAreaHeight = this.TextArea.scrollHeight +"px"; 
+    },
+    watch: {
+        Summary: function(){
+            this.TextAreaHeight = "auto";//сначала ставлю высоту автоматическую
+                                           //чтобы высота уменьшилась! если высота текста
+                                           //уменьшилась
+            //а потом, сделаю высоту такой какая требуется (вычисленная из scrollHeight)
+            this.$nextTick(function() {
+                console.log('nextTick.scrollHeight:',this.TextArea.scrollHeight);
+                this.TextAreaHeight = this.TextArea.scrollHeight +"px";
+            })
         }
-    }
+    },
+    computed: {
+        Summary:{
+            get() {
+                return this.text;
+            },
+            set() {}
+        }
+    }    
 }
 </script>
 
 <style scoped>
-
-.tabsheets {
-    display: flex;
-    align-items: flex-end;
-    padding-left: 4px;
-    padding-right: 4px;
-    padding-top: 0px;
-    padding-bottom: 12px;
-    line-height: 24px;
-}
-
-.tabsheet {
-    cursor: pointer;
-    user-select: none;
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.active  {
-    border-top: 2px solid var(--warning-color);
-    border-bottom: 1px solid transparent;
-    background-color: var(--primary-color);
-    color: #fff; /* цвет текста */
-    opacity: 0.9;
-}
-
-.nonactive  {
-    border: 1px solid var(--accent-color);
-    opacity: 0.5;
-}
-
-.tabbreak {
-    margin-left: 0px;
-    margin-right: 0px;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    border-bottom: 1px solid var(--accent-color);
-    width: 2px;
-}
-
-.flex-1 {
-    flex: 1;
-}
 
 </style>
