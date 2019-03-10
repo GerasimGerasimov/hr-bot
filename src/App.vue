@@ -1,19 +1,23 @@
 <template>
-  <div id="app" class="layout">
-    
+  <div id="app" class="layout">  
     <login-form        v-if = "page == 'login'" ></login-form>
     <groups-form  v-else-if = "page == 'groups'"></groups-form>
     <campany-form v-else-if = "page == 'campany'"></campany-form>
   </div>
 </template>
 
+
 <script>
-  //Login Page
-  import loginForm   from './components/login/loginForm.vue'
-  //Groups Page
-  import GroupsForm from './components/groups/GroupsForm.vue'
-  //Campany Page
-  import CampanyForm from './components/campany/CampanyForm.vue'
+//Login Page
+import loginForm   from './components/pages/loginForm.vue'
+//Groups Page
+import GroupsForm from './components/pages/GroupsForm.vue'
+//Campany Page
+import CampanyForm from './components/pages/CampanyForm.vue'
+
+//import HelloWorld from './components/HelloWorld.vue'
+//import AuthController from "./Controllers/AuthController.js";
+//import { async } from 'q';
 
 export default {
   name: 'app',
@@ -45,6 +49,7 @@ export default {
     CampanyForm
   }
 }
+
 </script>
 
 <style>

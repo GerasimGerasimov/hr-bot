@@ -112,7 +112,7 @@ export default {
 
 <style scoped>
   .header {
-    //background-color: lightgray;
+    /*background-color: lightgray;*/
     /*background: repeating-radial-gradient(circle, var(--info-color), var(--accent-color) 10px, var(--accent-color) 10px, var(--accent-color) 20px);*/
     grid-column: 1/15;
     text-align: center;

@@ -3,7 +3,7 @@
  */
 
 module.exports  = {
-    getURL: getURL
+    getURL
 };
 
 

@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-var URLs = require('./urls.js');
+//import AuthController from "../Controllers/AuthController.js";
+//const AuthController  = require('../Controllers/AuthController.js');
+const URLs = require('./urls.js');
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+export const store = new Vuex.Store({  
     state: {
         pages: "login", //login, groups, campany
         //имя и пароль пользователя
@@ -93,6 +95,8 @@ export default new Vuex.Store({
       * @param {*} data 
       */
       tryLogin ({commit}, data) {
+        //const Auth = new AuthController();
+        //Auth.registration();
         var self = this;
         self.state.loading = true;
         //
