@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-//import AuthController from "../Controllers/AuthController.js";
-//const AuthController  = require('../Controllers/AuthController.js');
+import AuthController from "../Controllers/AuthController.js";
 const URLs = require('./urls.js');
 
 Vue.use(Vuex)
@@ -95,61 +94,20 @@ export const store = new Vuex.Store({
       * @param {*} data 
       */
       tryLogin ({commit}, data) {
-        //const Auth = new AuthController();
-        //Auth.registration();
-        var self = this;
-        self.state.loading = true;
-        //
-        var url = 'user';
-        fetch(URLs.getURL(url),//URL
-          //Заголовок
-          {
-            method: 'PATCH', //заменить на POST!!!
-            body: JSON.stringify(
-                {
-                  login:    self.state.user,
-                  email:    self.state.email,
-                  password: self.state.password
-                }
-            ),
-            headers: new Headers({
-              'Content-Type': 'application/json'
-            }),
-            credentials:'same-origin'
-          })
-          //ожидание ответа сервера
-          .then (response => {
-            console.log("response",response);
-            if (response.status != 200)
-              throw new Error('Page '+url+' Not Found ' + response.status);
-            //путь существует, смотрю что пришло
-            let data = response.json();
-            return data;
-          })//ответный JSON распарсен без ошибок... но что же в нём?
-          .then (data => { //выделяю юзера, если такого поля нет то неправильный JSON
-            if (typeof data['user'] === "undefined") throw new Error('USER key is`t found');
-            console.log("data.user:",data.user);
-            return data;
-          })//сюда прихожу если в принятом JSON есть поле user
-          .then (data => {
-            if (data.user === 'User with such name not found')  throw new Error('User with such name not found');
-            if (data.user === 'Incorrect password')             throw new Error('Incorrect password');
-            //Данные приняты. Если есть поле группы - загружаю группы
-            if (typeof data['Groups'] != "undefined") {
-              console.log("data.groups:",data.Groups);
-              commit('enterToGroups',data.Groups);
-            } else {
-              console.log("data.groups: empty");
-              commit('enterToGroups',[]);
-            } 
+        const url = 'user';
+        AuthController.getGroups(URLs.getURL(url), this.state.user, this.state.password)
+          .then(result => {
+            console.log('tryLogin:', result)
+            this.state.loading = true;
+            commit('enterToGroups',result);
           })
           .catch((error) => {//отрабатываю ошибку коннекта
-              console.log('request failed', error);
-              self.state.loading = false;
-              self.state.wrongLogin = true;
-              self.state.loggedIn = false;
-              commit('updatePages', 'login');
-          });
+            console.log('getGroups failed', error);
+            this.state.loading = false;
+            this.state.wrongLogin = true;
+            this.state.loggedIn = false;
+            commit('updatePages', 'login');
+        });
       },
       logOut({commit}, value) {//разлогинится
         commit('logOut', '');
