@@ -31,7 +31,7 @@ export default {
     },
     mounted(){
         //только после mounted открывается доступ к элементам HTML описанных в $refs
-        console.log('setTextAreaHeight:',this.$refs.textarea);
+        //console.log('setTextAreaHeight:',this.$refs.textarea);
         this.TextArea = this.$refs.textarea;
         this.TextAreaHeight = this.TextArea.scrollHeight +"px"; 
     },
@@ -42,7 +42,6 @@ export default {
                                            //уменьшилась
             //а потом, сделаю высоту такой какая требуется (вычисленная из scrollHeight)
             this.$nextTick(function() {
-                console.log('nextTick.scrollHeight:',this.TextArea.scrollHeight);
                 this.TextAreaHeight = this.TextArea.scrollHeight +"px";
             })
         }

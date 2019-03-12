@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthController from "../Controllers/AuthController.js";
+import CandidatesController from "../Controllers/CandidatesController.js";
 const URLs = require('./urls.js');
 
 Vue.use(Vuex)
@@ -88,25 +89,33 @@ export const store = new Vuex.Store({
       }
     },
     actions: {
-      /**
-      * Попытка залогинится на сервере, с передачёй логина и пароля
-      * @param {*} param0 
-      * @param {*} data 
-      */
-      tryLogin ({commit}, data) {
+      //передаю имя и пароль, получаю группы (кампании) этого пользователя
+      GET_GROUPS ({commit}, payload) {
         const url = 'user';
         AuthController.getGroups(URLs.getURL(url), this.state.user, this.state.password)
           .then(result => {
-            console.log('tryLogin:', result)
+            console.log('GET_GROUPS:', result)
             this.state.loading = true;
             commit('enterToGroups',result);
           })
           .catch((error) => {//отрабатываю ошибку коннекта
-            console.log('getGroups failed', error);
+            console.log('GET_GROUPS failed', error);
             this.state.loading = false;
             this.state.wrongLogin = true;
             this.state.loggedIn = false;
             commit('updatePages', 'login');
+        });
+      },
+      //получение списка кандидатов
+      GET_CANDIDATES ({commit}, payload) {
+          console.log('GET_CANDIDATES:')
+          const url = 'user';
+          CandidatesController.getList(URLs.getURL(url), this.state.campany.Candidates)
+          .then(result => {
+            console.log('GET_CANDIDATES :', result)
+          })
+          .catch((error) => {//отрабатываю ошибку коннекта
+            console.log('GET_CANDIDATES  failed', error);
         });
       },
       logOut({commit}, value) {//разлогинится

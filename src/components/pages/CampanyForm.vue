@@ -103,6 +103,10 @@ export default {
             }
         }
     },
+    created: function(){
+        //загружу список кандидатов
+        this.$store.dispatch('GET_CANDIDATES');
+    },
     methods: {
         //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
         onChTabSheetsEmployersIndex(index){

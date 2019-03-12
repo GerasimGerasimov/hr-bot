@@ -40,7 +40,7 @@
           >
           <button
             class="__button bgc-success width-100pr"
-            @click="tryLogin()"
+            @click="login()"
             >
             НАЧАТЬ РАБОТУ
           </button>
@@ -74,9 +74,8 @@ export default {
     /**
      * tryLogin попытка логина, запускается с кнопки "НАЧАТЬ РАБОТУ"
     */
-    tryLogin(){
-      //this.$store.state.wrongLogin = !this.$store.state.wrongLogin;
-      this.$store.dispatch('tryLogin',{delay:500});
+    login(){
+      this.$store.dispatch('GET_GROUPS');
     }
   },
   //Вычисляемые свойства

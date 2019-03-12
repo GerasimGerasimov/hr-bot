@@ -49,10 +49,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="entry in filteredData" :key="entry.filterKey">
+                <tr v-for="group in filteredData" :key="group.filterKey">
                     <td v-for="columnName in getColumnsName" :key="columnName"
-                        @click="goToCompanyPage(entry)">
-                        {{entry[columnName]}}
+                        @click="goToCompanyPage(group)">
+                        {{group[columnName]}}
                     </td>
                 </tr>
                 </tbody>
@@ -101,9 +101,10 @@ export default {
         logOut(){
             this.$store.dispatch('logOut','');
         },
-        goToCompanyPage(value){
-            console.log('goToCompanyPage:',value);
-            this.$store.commit('enterToCampany', value);
+        //Получает выбранный в таблице объект Группа
+        //Инициирует открытие страницы данных Группы с загрузкой соответсвущих полей
+        goToCompanyPage(group){
+            this.$store.commit('enterToCampany', group);
         },
         sortBy (key) {
             this.sortKey = key;
