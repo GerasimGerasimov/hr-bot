@@ -8,7 +8,7 @@ module.exports  = {
 
 
 const DEBUG_MODE = true;
-const DEV_ROOT  = "http://localhost:3000/"
+const DEV_ROOT  = "http://localhost:5000/"
 const DIST_ROOT = "http://hrhelper.ru/"
 
 

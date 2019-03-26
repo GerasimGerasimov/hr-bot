@@ -75,7 +75,7 @@ export default {
      * tryLogin попытка логина, запускается с кнопки "НАЧАТЬ РАБОТУ"
     */
     login(){
-      this.$store.dispatch('GET_GROUPS');
+      this.$store.dispatch('AUTH');
     }
   },
   //Вычисляемые свойства

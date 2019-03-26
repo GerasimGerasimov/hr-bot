@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import AuthController from "../Controllers/AuthController.js";
-import CandidatesController from "../Controllers/CandidatesController.js";
+import AuthController from "../Controllers/AuthController.js"
+import CandidatesController from "../Controllers/CandidatesController.js"
+import * as ApiRouts from "../Controllers/apirouts.js"
 const URLs = require('./urls.js');
 
 Vue.use(Vuex)
@@ -10,13 +11,14 @@ export const store = new Vuex.Store({
     state: {
         pages: "login", //login, groups, campany
         //имя и пароль пользователя
-        user:"Gerasim",
+        username:"Gerasim",
         email:"dialix@yandex.ru",
         password:"qwerty",
+        token:'',
         //
         wrongLogin: false,//неправильный логин пароль
         loggedIn: false,//пользователь в системе
-        loading:false,//индикатор загрузки
+        isLoading:false,//индикатор загрузки
         //
         groups: [], //группы
         campany: {} //кампания
@@ -43,7 +45,7 @@ export const store = new Vuex.Store({
        * @param {*} value - state.groups: [] - массив группы
        */
       enterToGroups(state, value) {//Группы загружены, требуется их отобразить
-        state.loading = false;
+        state.isLoading = false;
         console.log('enterToGroups:', value);
         state.groups = value;//загрузить массив групп
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
@@ -58,7 +60,7 @@ export const store = new Vuex.Store({
       },
       logOut(state, value) {//разлогинится
         state.groups = [];
-        state.loading = false;
+        state.isLoading = false;
         state.wrongLogin = false;
         state.loggedIn = false;
         state.pages = 'login';//следующая страница - группы!
@@ -89,18 +91,63 @@ export const store = new Vuex.Store({
       }
     },
     actions: {
-      //передаю имя и пароль, получаю группы (кампании) этого пользователя
+      //передаю имя и пароль, получаю токен
+      async AUTH ({commit, dispatch}, payload) {
+        this.state.isLoading = true;
+        try {
+          this.state.token = await AuthController.getAuth(URLs.getURL(ApiRouts.AUTH_GET_TOKEN), this.state.username, this.state.password)
+          console.log('GET_AUTH_OK:', this.state.token)
+           this.state.isLoading = false
+          this.state.wrongLogin = false
+          this.state.loggedIn = true
+          console.log('GET_AUTH_OK: 1-1-1-1-1')
+          let groups =  AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('GET_AUTH_ERROR:', error)
+            this.state.isLoading = false
+            //показываю юзеру отрицательный результат
+            this.state.wrongLogin = true
+            this.state.loggedIn = false
+            commit('updatePages', 'login')           
+        };
+        /*
+        AuthController.getAuth(URLs.getURL(ApiRouts.AUTH_GET_TOKEN), this.state.username, this.state.password)
+          .then(result => {
+            console.log('GET_AUTH_OK:', result)
+            this.state.token = result
+            this.state.isLoading = false
+            this.state.wrongLogin = false
+            this.state.loggedIn = true
+            //commit('enterToGroups',result);
+            console.log('GET_AUTH_OK: 1-1-1-1-1')
+          })
+          .then (
+            (async () => {
+              console.log('getGroups : 2-2-2-2-2')
+              AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+            })()
+          )
+          .catch((error) => {//отрабатываю ошибку коннекта
+            console.log('GET_AUTH_ERROR:', error)
+            this.state.isLoading = false
+            //показываю юзеру отрицательный результат
+            this.state.wrongLogin = true
+            this.state.loggedIn = false
+            commit('updatePages', 'login')           
+          });
+          */
+      },
+      //передаю имя, пароль и токен (после логина) получаю группы (кампании) этого пользователя
       GET_GROUPS ({commit}, payload) {
-        const url = 'user';
-        AuthController.getGroups(URLs.getURL(url), this.state.user, this.state.password)
+        AuthController.getGroups(URLs.getURL(GROUPS_GET_GROUPS), this.state.username, this.state.token)
           .then(result => {
             console.log('GET_GROUPS:', result)
-            this.state.loading = true;
+            this.state.isLoading = true;
             commit('enterToGroups',result);
           })
           .catch((error) => {//отрабатываю ошибку коннекта
             console.log('GET_GROUPS failed', error);
-            this.state.loading = false;
+            this.state.isLoading = false;
             this.state.wrongLogin = true;
             this.state.loggedIn = false;
             commit('updatePages', 'login');
@@ -133,13 +180,13 @@ export const store = new Vuex.Store({
         return state.wrongLogin;
       },
       loading (state) {
-        return state.loading;
+        return state.isLoading;
       },
       loggedIn (state) {
         return state.loggedIn;
       },
       user (state) {
-        return state.user;
+        return state.username;
       }
     }
 })
@@ -177,7 +224,7 @@ export const store = new Vuex.Store({
 /*
         setTimeout(() => {
           commit('touggleWrongLogin', '');
-          this.state.loading = false;
+          this.state.isLoading = false;
           if ((this.state.email == "dialix@yandex.ru") &&
                 (this.state.password == "qwerty")) {
                   //есть вход!

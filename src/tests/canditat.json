@@ -1,0 +1,11 @@
+        "id": "c1",
+        "GroupID": "1",
+        "FullName": "Петя Иванов",
+        "ProfileURI": "https://www.linkedin.com/in/gerasim-gerasimov-b55936a5/",
+        "Skills": "Bamboo, Java, Swift, Expresso, XCUITest, white box testing, integration testing, API testing, Fluent English",
+        "Company": "Site Studio",
+        "Position": "Senior Test Automation Engineer (Java)",
+        "InvitationAccepted": "true",
+        "AcceptionDate": "12.10.2018",
+        "Note": "Адекватный",
+        "Checked": "true"
