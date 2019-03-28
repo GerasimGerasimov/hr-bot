@@ -102,13 +102,10 @@ export default class AuthController {
         try {
             return await fetch(url,{
                 method: "POST",
-                body: JSON.stringify({
-                    username,
-                    password
-                }),
                 //mode:"cors",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": `Basic ${btoa(`${username}:${password}`)}`                
                 }
             })
             .then (handledAuthResponse)
@@ -131,10 +128,7 @@ export default class AuthController {
                     //mode:"cors",
                     headers: {
                         'Content-Type': 'application/json',
-                        "Authorization": `Basic ${btoa(JSON.stringify({
-                            username,
-                            token
-                        }))}`
+                        "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
                     }
             })
             .then (handledGroupsGetResponse)

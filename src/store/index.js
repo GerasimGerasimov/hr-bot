@@ -43,7 +43,10 @@ export const store = new Vuex.Store({
        * enterToGroups
        * @param {*} state 
        * @param {*} value - state.groups: [] - массив группы
-       */
+       */ 
+      setPageGroups(state) {
+        state.pages = 'groups';//следующая страница - группы!
+      },
       enterToGroups(state, value) {//Группы загружены, требуется их отобразить
         state.isLoading = false;
         console.log('enterToGroups:', value);
@@ -100,8 +103,8 @@ export const store = new Vuex.Store({
            this.state.isLoading = false
           this.state.wrongLogin = false
           this.state.loggedIn = true
-          console.log('GET_AUTH_OK: 1-1-1-1-1')
-          let groups =  AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+          commit('setPageGroups');
+          //let groups =  await AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_AUTH_ERROR:', error)
             this.state.isLoading = false
@@ -138,20 +141,19 @@ export const store = new Vuex.Store({
           */
       },
       //передаю имя, пароль и токен (после логина) получаю группы (кампании) этого пользователя
-      GET_GROUPS ({commit}, payload) {
-        AuthController.getGroups(URLs.getURL(GROUPS_GET_GROUPS), this.state.username, this.state.token)
-          .then(result => {
-            console.log('GET_GROUPS:', result)
-            this.state.isLoading = true;
-            commit('enterToGroups',result);
-          })
-          .catch((error) => {//отрабатываю ошибку коннекта
+      async GET_GROUPS ({commit, dispatch}, payload) {
+        try {
+          let groups =  await AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+          console.log('GET_GROUPS:', groups)
+            this.state.isLoading = true
+            commit('enterToGroups',groups);
+        } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_GROUPS failed', error);
             this.state.isLoading = false;
             this.state.wrongLogin = true;
             this.state.loggedIn = false;
             commit('updatePages', 'login');
-        });
+        }
       },
       //получение списка кандидатов
       GET_CANDIDATES ({commit}, payload) {
