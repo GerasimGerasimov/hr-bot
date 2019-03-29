@@ -50,7 +50,15 @@ export const store = new Vuex.Store({
       enterToGroups(state, value) {//Группы загружены, требуется их отобразить
         state.isLoading = false;
         console.log('enterToGroups:', value);
-        state.groups = value;//загрузить массив групп
+        state.groups = []
+        //надо преобразовать список объектов data/groups/1
+        //в массив key:data/groups/1 value=
+        for (let item in value) {
+          console.log(item)
+          state.groups.push(value[item])  
+        }
+        console.log(state.groups)
+        //state.groups = value;//загрузить массив групп
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
         state.wrongLogin = false;
         state.loggedIn = true;
@@ -104,7 +112,6 @@ export const store = new Vuex.Store({
           this.state.wrongLogin = false
           this.state.loggedIn = true
           commit('setPageGroups');
-          //let groups =  await AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_AUTH_ERROR:', error)
             this.state.isLoading = false
@@ -113,37 +120,11 @@ export const store = new Vuex.Store({
             this.state.loggedIn = false
             commit('updatePages', 'login')           
         };
-        /*
-        AuthController.getAuth(URLs.getURL(ApiRouts.AUTH_GET_TOKEN), this.state.username, this.state.password)
-          .then(result => {
-            console.log('GET_AUTH_OK:', result)
-            this.state.token = result
-            this.state.isLoading = false
-            this.state.wrongLogin = false
-            this.state.loggedIn = true
-            //commit('enterToGroups',result);
-            console.log('GET_AUTH_OK: 1-1-1-1-1')
-          })
-          .then (
-            (async () => {
-              console.log('getGroups : 2-2-2-2-2')
-              AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
-            })()
-          )
-          .catch((error) => {//отрабатываю ошибку коннекта
-            console.log('GET_AUTH_ERROR:', error)
-            this.state.isLoading = false
-            //показываю юзеру отрицательный результат
-            this.state.wrongLogin = true
-            this.state.loggedIn = false
-            commit('updatePages', 'login')           
-          });
-          */
       },
       //передаю имя, пароль и токен (после логина) получаю группы (кампании) этого пользователя
-      async GET_GROUPS ({commit, dispatch}, payload) {
+      async GET_USER_GROUPS ({commit, dispatch}, payload) {
         try {
-          let groups =  await AuthController.getGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+          let groups =  await AuthController.getUserGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
           console.log('GET_GROUPS:', groups)
             this.state.isLoading = true
             commit('enterToGroups',groups);
@@ -198,8 +179,8 @@ export const store = new Vuex.Store({
        *  1) New - ещё не нажата кнопка "выполнить поиск кандидатов"
        *  2) Search - робот ищет кандидатов. Признаки:
        *              1. Поле SearchParams не пустое
-       *              2. Поле Candidates пустое (не нашёл ещё никого)
-       *  3) Active - кандидаты найдены (Поле Candidates содержит список id кандидатов)
+       *              2. Поле candidates_count пустое или = НУЛЮ (не нашёл ещё никого)
+       *  3) Active - кандидаты найдены (Поле candidates_count содержит кол-во кандидатов)
        *              на этом этапе работает HR с предоставленной выборкой
        *  4) Done - кампания закрыта, требуемые кадры наняты 
        * 
@@ -208,12 +189,12 @@ export const store = new Vuex.Store({
       var getGroupStatus = (groups) =>{
         groups.forEach(element => {
           if ((element.SearchParams.length != 0) &&
-              (element.Candidates.length == 0)) {
+              (element.candidates_count == 0)) {
                 element.Status = "Search";
                 return true;
               }
-          if (element.Candidates.length != 0) {
-            element.Status = `Active: ${element.Candidates.length}`;
+          if (element.candidates_count != 0) {
+            element.Status = `Active: ${element.candidates_count}`;
             return true;
           }
           if (element.Visible == false) {
@@ -222,49 +203,3 @@ export const store = new Vuex.Store({
           element.Status = "New";//значение по умолчанию
         });
       }
-
-/*
-        setTimeout(() => {
-          commit('touggleWrongLogin', '');
-          this.state.isLoading = false;
-          if ((this.state.email == "dialix@yandex.ru") &&
-                (this.state.password == "qwerty")) {
-                  //есть вход!
-                  this.state.wrongLogin = false;
-                  this.state.loggedIn = true;
-                  //следующая страница - группы!
-                  commit('updatePages', 'groups');
-                }
-                else {
-                  this.state.wrongLogin = true;
-                  this.state.loggedIn = false;
-                  commit('updatePages', 'login');
-                }
-        }, data.delay)
-*/
-
-          /*
-          .then (function(response) {
-              //получил какой-то ответ от сервера, может быть и 404-й ответ (жду 200-й)
-              console.log("responses:",response);
-              if(response.ok) {
-                //запрошенная страница есть
-                //теперь надо проверить что ответил сервер, если юзер не авторизован то есть
-                //два варианта ответа:
-                //1.  {user: 'Incorrect password'}  или юзер есть но в пароле ошибся
-                //2.  {user: 'User with such name not found'} юзера нет, нада регаться
-                console.log("samedata is reading", response);//какие-то данные прочитаны, значит есть коннект
-                response.json()
-                .then(function(json) {
-                  console.log("json content:",json);
-                  console.log("json user:",json.user, self.state.user);
-                  if (json.user == self.state.user) {
-                    console.log(self.state.user + 'is autorized uzer');
-                    this.state.wrongLogin = false;
-                    this.state.loggedIn = true;
-                  }
-                });
-              } else {
-                console.log('Network request for products.json failed with response ' + response.status + ': ' + response.statusText);
-              }
-            })*/

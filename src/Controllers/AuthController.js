@@ -72,32 +72,7 @@ export default class AuthController {
         //console.log('AuthController created');
     }
 
-    /**
-    *   POST http://localhost:5000/auth
-    *   BODY: {"username":"test","password":"test"}
-    * @param {*} url 
-    * @param {*} username 
-    * @param {*} password 
-    * @description 
-    * POST запрос возвращает:
-    * SUCCESS:
-        {
-            "data": {
-                "signature": "$pbkdf2-sha256$29000$cq7Vurd2bq2Vco5xrpWSEg$7jqKYez24totET6cOs3v5xnXKcirjOq9qQIzZhOwTwU"
-            },
-            "success": true
-        }
-        Значение signature является по сути токеном и его необходимо использовать
-        при всех дальнейших запросах.
-        FAILED:
-        {
-            "error": {
-                "code": 401,
-                "message": "Failed auth"
-            },
-            "success": false
-        }
-    */
+    //идентификация
     static async getAuth (url, username, password) {
         try {
             return await fetch(url,{
@@ -117,12 +92,8 @@ export default class AuthController {
     }
 
     //вход и получение данных о группах (компаниях пользователя)
-    static async getGroups (url, username, token) {
-        try {
-            //let sBase64 = btoa(JSON.stringify({username, token}))
-            //console.log(`sBase64: ${sBase64}`) //показать закодированную строку
-            //console.log(`JSON string: ${atob(sBase64)}`) //раскодировать и показать
-            
+    static async getUserGroups (url, username, token) {
+        try {          
             return await fetch (url, {
                     method: 'GET',
                     //mode:"cors",
@@ -137,26 +108,6 @@ export default class AuthController {
             console.log('getGroups:error',error)
             throw new Error(`getGroups.no Data: ${error}`)
         }
-        /*
-        try {
-            let response = await fetch(url,header)
-            switch (response.status) {
-                case 400: throw new Error ('Bad request')
-                case 401: throw new Error ('User unauthorised')                        
-                case 404: throw new Error ('Url not found')
-            }
-            let data = await response.json()
-            console.log(data)
-            //if (typeof data['user'] === "undefined")            throw new Error('USER key is`t found');
-            //if (data.user === 'User with such name not found')  throw new Error('User with such name not found');
-            //if (data.user === 'Incorrect password')             throw new Error('Incorrect password');
-            //Данные приняты. Если есть поле группы - загружаю группы
-            //if (typeof data['Groups'] === "undefined") data.Groups=[]
-            return data //.Groups
-        } catch(error) {
-            throw new Error(`AuthController.login: ${error}`)
-        }
-        */
     }
 
     //регистрация нового пользователя

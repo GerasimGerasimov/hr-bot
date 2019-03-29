@@ -98,7 +98,7 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch('GET_GROUPS')
+        this.$store.dispatch('GET_USER_GROUPS')
     },
     methods: {
         logOut(){
