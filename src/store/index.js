@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthController from "../Controllers/AuthController.js"
+import GroupsController from "../Controllers/AuthController.js"
 import CandidatesController from "../Controllers/CandidatesController.js"
 import * as ApiRouts from "../Controllers/apirouts.js"
 const URLs = require('./urls.js');
@@ -27,9 +28,6 @@ export const store = new Vuex.Store({
       updatePages(state, page){
         state.pages = page;
       },
-      touggleWrongLogin(state){
-        state.wrongLogin =!state.wrongLogin;
-      },
       updateEmail(state, value){
         state.email = value;
       },
@@ -47,22 +45,29 @@ export const store = new Vuex.Store({
       setPageGroups(state) {
         state.pages = 'groups';//следующая страница - группы!
       },
+      setLoggedIn(state){//установь состояние входа в систему
+        this.state.isLoading = false
+        this.state.wrongLogin = false
+        this.state.loggedIn = true
+      },
+      setWrongLogin(state){//установить состояние некорректного входа
+        this.state.isLoading = false
+        this.state.loggedIn = false
+        //показываю юзеру отрицательный результат
+        this.state.wrongLogin = true
+      },
       enterToGroups(state, value) {//Группы загружены, требуется их отобразить
-        state.isLoading = false;
         console.log('enterToGroups:', value);
         state.groups = []
         //надо преобразовать список объектов data/groups/1
         //в массив key:data/groups/1 value=
         for (let item in value) {
           console.log(item)
+          value[item].uri = item //сразу запишу путь до информации о группе
           state.groups.push(value[item])  
         }
         console.log(state.groups)
-        //state.groups = value;//загрузить массив групп
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
-        state.wrongLogin = false;
-        state.loggedIn = true;
-        state.pages = 'groups';//следующая страница - группы!
       },
       enterToCampany(state, value) {//вход в Кампанию
         console.log('enterToCampany:', value);
@@ -104,36 +109,47 @@ export const store = new Vuex.Store({
     actions: {
       //передаю имя и пароль, получаю токен
       async AUTH ({commit, dispatch}, payload) {
-        this.state.isLoading = true;
         try {
-          this.state.token = await AuthController.getAuth(URLs.getURL(ApiRouts.AUTH_GET_TOKEN), this.state.username, this.state.password)
-          console.log('GET_AUTH_OK:', this.state.token)
-           this.state.isLoading = false
-          this.state.wrongLogin = false
-          this.state.loggedIn = true
-          commit('setPageGroups');
+          this.state.isLoading = true//показать индикатор загрузки
+            this.state.token = await AuthController.getAuth(
+              URLs.getURL(ApiRouts.AUTH_GET_TOKEN), 
+                this.state.username, 
+                  this.state.password)
+            commit('setLoggedIn')//установить состояние входа в систему
+            commit('setPageGroups')//и перейти на стр ГРУППЫ
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_AUTH_ERROR:', error)
-            this.state.isLoading = false
-            //показываю юзеру отрицательный результат
-            this.state.wrongLogin = true
-            this.state.loggedIn = false
+            commit('setWrongLogin')//состояние ошибки при логине
             commit('updatePages', 'login')           
         };
       },
       //передаю имя, пароль и токен (после логина) получаю группы (кампании) этого пользователя
       async GET_USER_GROUPS ({commit, dispatch}, payload) {
         try {
-          let groups =  await AuthController.getUserGroups(URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), this.state.username, this.state.token)
+          this.state.isLoading = true//показать индикатор загрузки
+          let groups =  await AuthController.getUserGroups(
+            URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), 
+              this.state.username, 
+                this.state.token)
           console.log('GET_GROUPS:', groups)
-            this.state.isLoading = true
-            commit('enterToGroups',groups);
+          this.state.isLoading = false//скрыть индикатор загрузки
+          commit('enterToGroups',groups);
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_GROUPS failed', error);
-            this.state.isLoading = false;
-            this.state.wrongLogin = true;
-            this.state.loggedIn = false;
+            commit('setWrongLogin')//состояние ошибки при логине
             commit('updatePages', 'login');
+        }
+      },
+      async CREATE_GROUP ({commit, dispatch}, payload) {
+        try {
+          console.log('CREATE_GROUP:')
+          await GroupsController.addGroup(
+            URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
+              this.state.username, 
+                this.state.token,
+                  this.state.campany)
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('CREATE_GROUP failed', error);
         }
       },
       //получение списка кандидатов

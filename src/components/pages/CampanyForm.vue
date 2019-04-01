@@ -59,6 +59,7 @@
                     <input type="label" class="font-size-16 font-weight-600" value="">
                     <button
                             class="__button bgc-success ml4 mr4"
+                            @click="createGroup()"
                     >ВЫПОЛНИТЬ ПОИСК &#x2315</button>  
                 </div>    
             </div>
@@ -105,9 +106,14 @@ export default {
     },
     created: function(){
         //загружу список кандидатов
-        this.$store.dispatch('GET_CANDIDATES');
+        console.log('CompanyForm.created',this.$store.state.campany)
+        if (!this.$store.state.campany.hasOwnProperty('uri'))
+            this.$store.dispatch('GET_CANDIDATES')
     },
     methods: {
+        createGroup(){
+            this.$store.dispatch('CREATE_GROUP')
+        },
         //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
         onChTabSheetsEmployersIndex(index){
             console.log(`onChTabSheetsEmployersIndex:${index}`)

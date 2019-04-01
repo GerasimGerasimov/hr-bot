@@ -1,65 +1,14 @@
-import xhrRequest from "../utils/xhrRequest"
-
-class ValidationError extends Error {
-    constructor(message) {
-      super(message);
-      this.name = "ValidationError"
-    }
-}
-  
-class PropertyRequiredError extends ValidationError {
-    constructor(property) {
-      super(`No property: ${property}`)
-      this.name = "PropertyRequiredError"
-      this.property = property
-    }
-}
+import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 /* AUTH */
-class AuthFetchError extends Error {
-    constructor(message, code) {
-      super(`FetchError: ${code} ${message}`);
-      this.name = "AuthFetchError"
-      this.code = code
-    }
-}
-
-const handledAuthResponse = response => {
-    //console.log('getAuth:response:',response)
-    switch (response.status) {
-        case 400: throw new AuthFetchError ('Bad request'   , response.status)
-        case 404: throw new AuthFetchError ('Url not found' , response.status)        
-        case 401: throw new AuthFetchError (response.message, response.status)                        
-    }
-    return response.json()
-}
-
 const validationAuthJSON = data => {
     console.log('getAuth:data:',data)
-    if (!data.hasOwnProperty('data'))           throw new PropertyRequiredError('data')
+    if (!data.hasOwnProperty('data'))       throw new PropertyRequiredError('data')
     if (!data.data.hasOwnProperty('token')) throw new PropertyRequiredError('token')
     return data.data.token
 }
 
 /*GROUPS*/
-class GroupsGetFetchError extends Error {
-    constructor(message, code) {
-      super(`FetchError: ${code} ${message}`);
-      this.name = "GroupsGetFetchError"
-      this.code = code
-    }
-}
-
-const handledGroupsGetResponse = response => {
-    console.log('getGroups:response:',response)
-    switch (response.status) {
-        case 400: throw new GroupsGetFetchError ('Bad request'   , response.status)
-        case 404: throw new GroupsGetFetchError ('Url not found' , response.status)        
-        case 401: throw new GroupsGetFetchError (response.message, response.status)                        
-    }
-    return response.json()
-}
-
 const validationGroupsGetJSON = data => {
     console.log('getGroups:data:',data)
     if (!data.hasOwnProperty('data'))        throw new PropertyRequiredError('data')
@@ -83,7 +32,7 @@ export default class AuthController {
                     "Authorization": `Basic ${btoa(`${username}:${password}`)}`                
                 }
             })
-            .then (handledAuthResponse)
+            .then (handledResponse)
             .then (validationAuthJSON)
         } catch(error) {
             //console.log('getAuth:error',error)
@@ -102,7 +51,7 @@ export default class AuthController {
                         "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
                     }
             })
-            .then (handledGroupsGetResponse)
+            .then (handledResponse)
             .then (validationGroupsGetJSON)
         } catch (error) {
             console.log('getGroups:error',error)

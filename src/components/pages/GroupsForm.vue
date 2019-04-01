@@ -22,11 +22,14 @@
                 <search-input v-model="filterKey"></search-input>
                 <button
                     class="__button bgc-success ml4 mr4"
-                >ДОБАВИТЬ КАМПАНИЮ</button>
+                    @click="addGroup()"
+                    >ДОБАВИТЬ КАМПАНИЮ
+                </button>
                 <button
                     class="__button bgc-primary ml4 mr4"
                     @click="logOut()"
-                >ВЫХОД</button>
+                    >ВЫХОД
+                </button>
             </nav>
         </div>
         <div>
@@ -62,7 +65,8 @@
 </template>
 
 <script>
-import SearchInput from '../ui/VSearchInput.vue'
+import SearchInput   from "../ui/VSearchInput.vue"
+import GroupTemplate from "../../classes/group.js"
 
 export default {
     data (){
@@ -101,12 +105,18 @@ export default {
         this.$store.dispatch('GET_USER_GROUPS')
     },
     methods: {
+        addGroup(){//добавить Кампанию(группу)
+            console.log('Добавить компанию')
+            const group = new GroupTemplate(this.$store.state.username)
+            this.$store.commit('enterToCampany', group)
+        },
         logOut(){
             this.$store.dispatch('logOut','');
         },
         //Получает выбранный в таблице объект Группа
         //Инициирует открытие страницы данных Группы с загрузкой соответсвущих полей
         goToCompanyPage(group){
+            console.log('goToCompanyPage',group)
             this.$store.commit('enterToCampany', group);
         },
         sortBy (key) {
