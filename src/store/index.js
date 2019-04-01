@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AuthController from "../Controllers/AuthController.js"
-import GroupsController from "../Controllers/AuthController.js"
+import GroupsController from "../Controllers/GroupsController.js"
 import CandidatesController from "../Controllers/CandidatesController.js"
 import * as ApiRouts from "../Controllers/apirouts.js"
 const URLs = require('./urls.js');

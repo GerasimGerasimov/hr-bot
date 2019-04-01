@@ -22,9 +22,7 @@ export default class GroupsController {
                         'Content-Type': 'application/json',
                         "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
                     },
-                    body: {
-                        group
-                    }
+                    body: JSON.stringify(group)
             })
             .then (handledResponse)
             .then (validationAddGroupJSON)
