@@ -4,6 +4,7 @@ import AuthController from "../Controllers/AuthController.js"
 import GroupsController from "../Controllers/GroupsController.js"
 import CandidatesController from "../Controllers/CandidatesController.js"
 import * as ApiRouts from "../Controllers/apirouts.js"
+import GroupTemplate from "../classes/group.js"
 const URLs = require('./urls.js');
 
 Vue.use(Vuex)
@@ -62,11 +63,10 @@ export const store = new Vuex.Store({
         //надо преобразовать список объектов data/groups/1
         //в массив key:data/groups/1 value=
         for (let item in value) {
-          console.log(item)
-          value[item].uri = item //сразу запишу путь до информации о группе
-          state.groups.push(value[item])  
+          //в item содержится полученный объект, но он может быть не полным
+          state.groups.push(convertGroupAPItoSPA(value[item], state)) 
         }
-        console.log(state.groups)
+        console.log('enterToGroups:result',state.groups)
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
       },
       enterToCampany(state, value) {//вход в Кампанию
@@ -98,6 +98,7 @@ export const store = new Vuex.Store({
       },
       updateGroupLocation(state, value){
         state.campany.Location = value;
+        console.log(state.campany.Location)
       },
       updateGroupCircles(state, value){
         state.campany.Circles = value;
@@ -143,11 +144,12 @@ export const store = new Vuex.Store({
       async CREATE_GROUP ({commit, dispatch}, payload) {
         try {
           console.log('CREATE_GROUP:')
+
           await GroupsController.addGroup(
             URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
               this.state.username, 
                 this.state.token,
-                  this.state.campany)
+                  convertGroupSPAtoAPI (this.state.campany))
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('CREATE_GROUP failed', error);
         }
@@ -189,9 +191,8 @@ export const store = new Vuex.Store({
       }
     }
 })
-
-      /**
-       * После загрузки групп, надо определить их статус:
+/**
+* После загрузки групп, надо определить их статус:
        *  1) New - ещё не нажата кнопка "выполнить поиск кандидатов"
        *  2) Search - робот ищет кандидатов. Признаки:
        *              1. Поле SearchParams не пустое
@@ -202,9 +203,9 @@ export const store = new Vuex.Store({
        * 
        * @param {*} groups массив групп (кампаний)
        */
-      var getGroupStatus = (groups) =>{
+      var getGroupStatus = groups => {
         groups.forEach(element => {
-          if ((element.SearchParams.length != 0) &&
+          if ((element.SearchParams.lenght != 0) &&
               (element.candidates_count == 0)) {
                 element.Status = "Search";
                 return true;
@@ -219,3 +220,67 @@ export const store = new Vuex.Store({
           element.Status = "New";//значение по умолчанию
         });
       }
+
+var convertGroupAPItoSPA = (item, state) => {
+  //в item содержится полученный объект, но он может быть не полным
+  /*
+  candidates_count:0
+  created:"Fri, 05 Apr 2019 09:02:27 GMT"
+  employer:""
+  position:""
+  visible:"True"
+  */
+  //надо:
+  //1) переименовать поля полученный от бэк-енда (после согласования исключу этот п)
+  //2) добавить поля которые НЕ присутствуют в ответе бэк-енда
+  //3) добавленным в п 2 поляем присвоить значения по умолчанию
+  console.log('convertGroupAPItoSPA.input:', item)
+  return item
+  let g = new GroupTemplate (state.username)
+  g.Employer = item.employer
+  g.Created = item.created
+  g.Position = item.position
+  g.Visible = item.visible
+  g.Location = item.geo
+  g.uri = item
+  console.log('new group:',g)
+  return g
+}
+
+var convertGroupSPAtoAPI = (item) => {
+  return item //закоментарить когда база быдут выдавать данные в оговорённом формате
+  let g = {
+    candidates_count : 0,
+    created:"",
+    employer:"",
+    position:"",
+    visible: true,
+    //
+    search_params:'',
+    inv_text:'',
+    message:'',
+    constraints:'',
+    position_var:'',
+    skills:'',
+    geo:'',
+    circles:''
+  }
+  /*
+*/
+  //{"position_var": "", "skills": "", "geo": "", "circles": "", "constraints": ""}
+  g.employer = item.Employer
+  g.created = item.Created
+  g.position = item.Position
+  g.visible = item.Visible
+  //
+  g.search_params = item.SearchParams
+  g.inv_text  = item.MessageTemplate
+  g.message = ''
+  g.constraints = item.Exceptions
+  g.position_var = item.Title
+  g.skills = item.Skills
+  g.geo = item.Location
+  g.circles = item.Circles
+  console.log('convertGroupSPAtoAPI:',g)
+  return g
+}

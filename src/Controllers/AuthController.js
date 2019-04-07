@@ -2,7 +2,7 @@ import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 /* AUTH */
 const validationAuthJSON = data => {
-    console.log('getAuth:data:',data)
+    //console.log('getAuth:data:',data)
     if (!data.hasOwnProperty('data'))       throw new PropertyRequiredError('data')
     if (!data.data.hasOwnProperty('token')) throw new PropertyRequiredError('token')
     return data.data.token
@@ -10,7 +10,7 @@ const validationAuthJSON = data => {
 
 /*GROUPS*/
 const validationGroupsGetJSON = data => {
-    console.log('getGroups:data:',data)
+    //console.log('getGroups:data:',data)
     if (!data.hasOwnProperty('data'))        throw new PropertyRequiredError('data')
     if (!data.data.hasOwnProperty('groups')) throw new PropertyRequiredError('groups')
     return data.data.groups
