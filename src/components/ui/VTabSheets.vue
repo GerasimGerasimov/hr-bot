@@ -36,10 +36,7 @@ export default {
     },
     data: function (){
         return {
-            tab: this.value,//беру начальное значение, потом его можифицирую
-            tabs: { 
-                active: 0,
-            }
+            tab: this.value,//выбранная вкладка. беру начальное значение, потом его модифицирую
         }
     },
     methods: {

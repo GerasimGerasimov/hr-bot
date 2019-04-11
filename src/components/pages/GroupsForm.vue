@@ -1,15 +1,20 @@
 /**
 * @description Форма опраций с Группами
-* JSON групп:Groups
-*   PK:	id
-*   FK:
-*        GroupName
-*        Owner
-*        Created
-*
-*        Candidates
-*        SearchParams
-*        MessageTemplate
+Вкладки:
+    АКТИВНЫЕ
+        1) показываю Группы с Visible = true
+        2) Кнопки Действия:
+            2.1 Завершить (ставит Visible = false)
+            2.2.Создать новую из копии (создать новую группу с настройками как у этой группы)
+            2.3.Удалить (безвозвратно!)
+    ЗАВЕРШЁННЫЕ 
+        1) показываю Группы с Visible = false
+        2) Кнопки Действия:
+            2.1.Создать новую из копии (создать новую группу с настройками как у этой группы)
+            2.2.Удалить (безвозвратно!)    
+    WASTEBASKET' (U+1F5D1) - удалить 
+    Завершить - Sleeping Face HTML Entity (hex)	&#x1f634;    
+
 */
 
 <template>
@@ -33,8 +38,12 @@
             </nav>
         </div>
         <div>
+            <center><h1 class="font-size-24 ml20">Группы</h1></center>
+            <tab-sheets :Captions = "tabSheetsGroupsSelect.Captions"
+                        :InitialTab = "0"
+                        :onChangeTabIndex = "onChTabSheetsGroupsIndex"
+            ></tab-sheets>
               <table>
-                <caption class="font-size-24 ml20">Группы</caption>
                 <thead>
                 <tr>
                     <th
@@ -52,11 +61,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="group in filteredData" :key="group.filterKey">
-                    <td v-for="columnName in getColumnsName" :key="columnName"
-                        @click="goToCompanyPage(group)">
-                        {{group[columnName]}}
+                <tr v-for="group in filteredData" :key="group.filterKey" @click="goToCompanyPage(group)">
+                    <td>{{group.Employer}}</td>
+                    <td>{{group.Position}}</td>
+                    <td>{{group.Created}}</td>
+                    <td>{{group.Location}}</td>
+                    <td>{{group.Status}}</td>
+                    <td>
+                        <icons-tool-bar
+                            :Captions = "IconsToolBarData.ToolsData"
+                            :InitialTab = "0"
+                        ></icons-tool-bar>
                     </td>
+                    <!--
+                    <td v-for="columnName in getColumnsName" :key="columnName">
+                        {{getCell(group, columnName)}}
+                    </td>
+                    -->
                 </tr>
                 </tbody>
             </table>
@@ -67,11 +88,13 @@
 <script>
 import SearchInput   from "../ui/VSearchInput.vue"
 import GroupTemplate from "../../classes/group.js"
+import TabSheets from '../ui/VTabSheets.vue'
+import IconsToolBar from '../ui/VIconsToolBar.vue'
 
 export default {
     data (){
         return {
-            columns: ['Employer', 'Position', 'Created', 'Location', 'Status'],
+            columns: ['Employer', 'Position', 'Created', 'Location', 'Status','Действия'],
             sortKey: '',
             sortDirections:'up',//'down'
             filterKey: '',
@@ -97,14 +120,34 @@ export default {
                     source: false,//если true то сортировка по этой колонке
                     dir:true      //направление сортировки
                 }       
-
-            ]
+            ],
+            tabSheetsGroupsSelect: {
+                Captions:['Активные','Скрытые'], //данные TabSheets
+                TabIndex:0
+            },
+            IconsToolBarData: {
+                ToolsData:[ {action:'DEL',  icon:'\u{1F5D1}', title:'Удалить группу'},
+                            {action:'COPY', icon:'+', title:'Создать группу на основе этой'},
+                            {action:'HIDE', icon:'\u{1f634}', title:'Завершить кампанию'}
+                    ]
+            }
         }
     },
     created() {
         this.$store.dispatch('GET_USER_GROUPS')
     },
     methods: {
+        getGroupActionsIcon(group){
+
+        },
+        getCell(item, key) {
+            //console.log(`getCell: ${item} ${key}`)
+            return(item[key])
+        },
+        //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
+        onChTabSheetsGroupsIndex(index){
+            console.log(`onChTabSheetsGroupsIndex:${index}`)
+        },
         addGroup(){//добавить Кампанию(группу)
             console.log('Добавить компанию')
             const group = new GroupTemplate(this.$store.state.username)
@@ -215,7 +258,9 @@ export default {
         }
     },
     components: {
-        SearchInput
+        SearchInput,
+        TabSheets,
+        IconsToolBar
     }
 }
 
@@ -291,7 +336,7 @@ td {
 }
 
 th, td {
-  min-width: 120px;
+  min-width: 100px;
   padding: 10px 20px;
 }
 
