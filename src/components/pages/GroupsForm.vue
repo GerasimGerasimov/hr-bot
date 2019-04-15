@@ -41,7 +41,7 @@
             <center><h1 class="font-size-24 ml20">Группы</h1></center>
             <tab-sheets :Captions = "tabSheetsGroupsSelect.Captions"
                         :InitialTab = "0"
-                        :onChangeTabIndex = "onChTabSheetsGroupsIndex"
+                        :onChangeTabIndex = "onClickTabSheets"
             ></tab-sheets>
               <table>
                 <thead>
@@ -61,23 +61,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="group in filteredData" :key="group.filterKey" @click="goToCompanyPage(group)">
+                <tr v-for="group in filteredData" :key="group.filterKey" >
                     <td>{{group.Employer}}</td>
                     <td>{{group.Position}}</td>
                     <td>{{group.Created}}</td>
                     <td>{{group.Location}}</td>
                     <td>{{group.Status}}</td>
-                    <td>
+                    <td @click="onClickToolCell(group)">
                         <icons-tool-bar
                             :Captions = "IconsToolBarData.ToolsData"
-                            :InitialTab = "0"
+                            :onClkToolBtn ="onClickToolBarButtons"
                         ></icons-tool-bar>
                     </td>
-                    <!--
-                    <td v-for="columnName in getColumnsName" :key="columnName">
-                        {{getCell(group, columnName)}}
-                    </td>
-                    -->
                 </tr>
                 </tbody>
             </table>
@@ -126,10 +121,17 @@ export default {
                 TabIndex:0
             },
             IconsToolBarData: {
-                ToolsData:[ {action:'DEL',  icon:'\u{1F5D1}', title:'Удалить группу'},
-                            {action:'COPY', icon:'+', title:'Создать группу на основе этой'},
-                            {action:'HIDE', icon:'\u{1f634}', title:'Завершить кампанию'}
-                    ]
+                ToolsData:[ {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
+                            {action:'DEL',   icon:'DELETE', title:'Удалить группу'},
+                            {action:'COPY',  icon:'COPY',   title:'Создать группу на основе этой'},
+                            {action:'HIDE',  icon:'HIDE',   title:'Скрыть группу'}
+                    ],
+                Action:{ //выбранное действие (DEL, COPY, HIDE)
+                    type: Object,
+                    default: function(){
+                        return {action:'DEFAULT'}
+                    }
+                }
             }
         }
     },
@@ -137,16 +139,34 @@ export default {
         this.$store.dispatch('GET_USER_GROUPS')
     },
     methods: {
-        getGroupActionsIcon(group){
-
+        //при клике на ячейке c кнопками-actions, ячейка знает группу group
+        //Когда юзер кликнул на ToolBar, то в Action попадает инфа о нажатой
+        //кнопки в ToolBar`e. Так зная group и action можно производить
+        //дальнейшие действия
+        onClickToolCell(group) {
+            this.applyAction(group, this.IconsToolBarData.Action.action) 
         },
-        getCell(item, key) {
-            //console.log(`getCell: ${item} ${key}`)
-            return(item[key])
+        //Выбор действия для группы
+        applyAction(group, action) {
+            let doAction = {
+                'ENTRY': this.goToCompanyPage,
+                'default': function(){
+                    console.log(`${action} not found`)
+                    return `${action} not found`
+                }
+            }
+            return (doAction[action] || doAction['default'])(group)
         },
-        //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
-        onChTabSheetsGroupsIndex(index){
-            console.log(`onChTabSheetsGroupsIndex:${index}`)
+        //вызывается при клике на ToolBar, заполняет Actio - какую кнопку
+        //на ToolBar нажал юзер
+        onClickToolBarButtons(item){
+            console.log('getCompanyPageAction:', item)
+            this.IconsToolBarData.Action = item
+        },
+        //клик по TabSheet. Требуется показать таблицу Групп в соответствии с выбором
+        //Активные или Скрытые
+        onClickTabSheets(index){
+            console.log(`onClickTabSheets:${index}`)
         },
         addGroup(){//добавить Кампанию(группу)
             console.log('Добавить компанию')

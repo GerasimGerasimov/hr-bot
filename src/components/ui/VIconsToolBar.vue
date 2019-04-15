@@ -3,7 +3,7 @@
         <slot v-for="(item) in Captions">
             <button class="toolbtn"
                 :title="item.title"
-                @click.stop="setIconActive(item)"
+                @click="setIconActive(item)"
             >{{item.icon}}</button> 
         </slot>
     </div>
@@ -21,9 +21,9 @@ export default {
                     return []
                 }
             },
-            onChangeIndex: {//Функция переданная из Родителя для вызова при клике на заголовок элемента TabSheet
+            onClkToolBtn: {//Функция переданная из Родителя для вызова при клике на заголовок элемента TabSheet
                 type: Function,//в параметре TabIndex в Родитель передаётся номер заголовка
-                default: function(Index) {console.log('default:onChangeIndex:',Index)}
+                default: function(item) {console.log('default:onChangeIndex:',item)}
             }
     },
     data: function (){
@@ -31,7 +31,8 @@ export default {
     },
     methods: {
         setIconActive(item) {
-            this.onChangeIndex(item)
+            console.log(item)
+            this.onClkToolBtn(item)
         }
     }
 }
@@ -39,7 +40,6 @@ export default {
 
 <style scoped>
     .toolbtn {
-        width: 32px; 
         height: 32px;
         color: red;
         padding-left: 4px;   
