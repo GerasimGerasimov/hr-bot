@@ -69,7 +69,7 @@
                     <td>{{group.Status}}</td>
                     <td @click="onClickToolCell(group)">
                         <icons-tool-bar
-                            :Captions = "IconsToolBarData.ToolsData"
+                            :Captions = "IconsToolBarData.ToolsData.Active"
                             :onClkToolBtn ="onClickToolBarButtons"
                         ></icons-tool-bar>
                     </td>
@@ -121,11 +121,17 @@ export default {
                 TabIndex:0
             },
             IconsToolBarData: {
-                ToolsData:[ {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
-                            {action:'DEL',   icon:'DELETE', title:'Удалить группу'},
-                            {action:'COPY',  icon:'COPY',   title:'Создать группу на основе этой'},
-                            {action:'HIDE',  icon:'HIDE',   title:'Скрыть группу'}
+                ToolsData: {
+                    Active:[ {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
+                             {action:'DEL',   icon:'DELETE', title:'Удалить группу'},
+                             {action:'COPY',  icon:'COPY',   title:'Создать группу на основе этой'},
+                             {action:'HIDE',  icon:'HIDE',   title:'Скрыть группу'}
                     ],
+                    Hide:[   {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
+                             {action:'DEL',   icon:'DELETE', title:'Удалить группу'},
+                             {action:'COPY',  icon:'COPY',   title:'Создать группу на основе этой'}
+                    ],                    
+                },
                 Action:{ //выбранное действие (DEL, COPY, HIDE)
                     type: Object,
                     default: function(){
@@ -149,7 +155,10 @@ export default {
         //Выбор действия для группы
         applyAction(group, action) {
             let doAction = {
-                'ENTRY': this.goToCompanyPage,
+                'ENTRY'  : this.goToCompanyPage,
+                'HIDE'   : this.hideGroup,
+                'COPY'   : this.copyGroup,
+                'DEL'    : this.deleteGroup,                            
                 'default': function(){
                     console.log(`${action} not found`)
                     return `${action} not found`
@@ -166,6 +175,7 @@ export default {
         //клик по TabSheet. Требуется показать таблицу Групп в соответствии с выбором
         //Активные или Скрытые
         onClickTabSheets(index){
+            this.tabSheetsGroupsSelect.TabIndex = index
             console.log(`onClickTabSheets:${index}`)
         },
         addGroup(){//добавить Кампанию(группу)
@@ -182,6 +192,18 @@ export default {
             console.log('goToCompanyPage',group)
             this.$store.commit('enterToCampany', group);
         },
+        hideGroup(group){
+            console.log('hideGroup',group)
+            group.Visible = 'false'
+        },
+        copyGroup(group){
+            console.log('copyGroup',group)
+            group.Visible = 'true'
+        }, 
+        deleteGroup(group){
+            console.log('deleteGroup',group)
+            //this.$store.state.groups
+        },               
         sortBy (key) {
             this.sortKey = key;
             //если я нажимаю на зоголовал таблицы, а до этого был выбран другой заголовок
@@ -213,7 +235,6 @@ export default {
                 console.log('|-'+item.key+': '+item.source+': '+item.dir );
             })
         },
-
         getSortDirections(key) {
             let dir = 'asc';
             this.SortOrders.forEach((item)=>{
@@ -222,7 +243,7 @@ export default {
                 }
             })
             return dir;
-        },
+        }
     },
 
     computed: {
@@ -230,7 +251,14 @@ export default {
             var sortKey = this.sortKey
             var filterKey = this.filterKey && this.filterKey.toLowerCase()
             var order = (this.sortDirections == 'up')?1:-1 //порядок сортировки
-            var data = this.$store.state.groups;//источник данных
+            //this.$store.state.groups;//источник данных
+            //в выборку должны попасть только данные в зависимости от Активные или Скрытые
+            //tabSheetsGroupsSelect: {
+            //    Captions:['Активные','Скрытые'], //данные TabSheets
+            //    TabIndex:0-Активные (Visible = true), 1-Скрытые  (Visible = false)
+            const reqGroups = (this.tabSheetsGroupsSelect.TabIndex == 0)?'true':'false'
+            var data = this.$store.state.groups.filter(item => item.Visible === reqGroups)
+
             console.log("filteredData: filterKey:",filterKey,
                                             " sortKey:",sortKey,
                                                 " DIR:", this.sortDirections)

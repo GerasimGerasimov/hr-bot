@@ -16,10 +16,11 @@
 <script>
 export default {
     inheritAttrs: false,
-    data: function (){
-        return {
-            value:''
-        }
+    props: {
+            value: { 
+                type: String,
+                default: function(){''}
+            }
     }
 }
 </script>
@@ -70,6 +71,7 @@ export default {
     background-color: white;
     min-width: 178px;
     max-width: 178px;
+    margin-left: 4px;
 }
 
 /*при наведении на любой элемент в классе, меняю прозрачность*/
