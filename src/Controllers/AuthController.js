@@ -12,8 +12,8 @@ const validationAuthJSON = data => {
 const validationGroupsGetJSON = data => {
     //console.log('getGroups:data:',data)
     if (!data.hasOwnProperty('data'))        throw new PropertyRequiredError('data')
-    if (!data.data.hasOwnProperty('groups')) throw new PropertyRequiredError('groups')
-    return data.data.groups
+    if (!data.data.hasOwnProperty('Groups')) throw new PropertyRequiredError('Groups')
+    return data.data.Groups
 }
 
 export default class AuthController {

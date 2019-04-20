@@ -194,11 +194,12 @@ export default {
         },
         hideGroup(group){
             console.log('hideGroup',group)
-            group.Visible = 'false'
+            group.Visible = false
+            this.$store.dispatch('SAVE_GROUP',group)
         },
         copyGroup(group){
             console.log('copyGroup',group)
-            group.Visible = 'true'
+            group.Visible = true
         }, 
         deleteGroup(group){
             console.log('deleteGroup',group)
@@ -256,8 +257,8 @@ export default {
             //tabSheetsGroupsSelect: {
             //    Captions:['Активные','Скрытые'], //данные TabSheets
             //    TabIndex:0-Активные (Visible = true), 1-Скрытые  (Visible = false)
-            const reqGroups = (this.tabSheetsGroupsSelect.TabIndex == 0)?'true':'false'
-            var data = this.$store.state.groups.filter(item => item.Visible === reqGroups)
+            const reqGroups = (this.tabSheetsGroupsSelect.TabIndex == 0)?true:false
+            const data = this.$store.state.groups.filter(item => item.Visible === reqGroups)
 
             console.log("filteredData: filterKey:",filterKey,
                                             " sortKey:",sortKey,

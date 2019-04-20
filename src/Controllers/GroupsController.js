@@ -30,5 +30,24 @@ export default class GroupsController {
             console.log('addGroup:error',error)
             throw new Error(`addGroup.none Group added: ${error}`)
         }
+    }
+    static async saveGroup (url, username, token, group) {
+        try {          
+            console.log('saveGroup', group)
+            return await fetch (url, {
+                    method: 'PUT',
+                    //mode:"cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
+                    },
+                    body: JSON.stringify(group)
+            })
+            .then (handledResponse)
+            .then (validationAddGroupJSON)
+        } catch (error) {
+            console.log('addGroup:error',error)
+            throw new Error(`addGroup.none Group added: ${error}`)
+        }
     }    
 }

@@ -58,13 +58,17 @@ export const store = new Vuex.Store({
         this.state.wrongLogin = true
       },
       enterToGroups(state, value) {//Группы загружены, требуется их отобразить
-        console.log('enterToGroups:', value);
+        console.log('enterToGroups==>:', value);
         state.groups = []
         //надо преобразовать список объектов data/groups/1
         //в массив key:data/groups/1 value=
         for (let item in value) {
           //в item содержится полученный объект, но он может быть не полным
-          state.groups.push(convertGroupAPItoSPA(value[item], state)) 
+          console.log('Before {...value[item]}==>',value[item])
+          let g = new GroupTemplate(state.username)
+          g.uri = item //ссылка на группу
+          Object.assign(g, value[item])//(g = {...value[item]})
+          state.groups.push(g) 
         }
         console.log('enterToGroups:result',state.groups)
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
@@ -144,14 +148,27 @@ export const store = new Vuex.Store({
       async CREATE_GROUP ({commit, dispatch}, payload) {
         try {
           console.log('CREATE_GROUP:')
-
           await GroupsController.addGroup(
             URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
               this.state.username, 
                 this.state.token,
-                  convertGroupSPAtoAPI (this.state.campany))
+                  this.state.campany)
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('CREATE_GROUP failed', error);
+        }
+      },
+      async SAVE_GROUP ({commit, dispatch}, group) {//сохранение изменённой информации о группе
+        try {
+          console.log('SAVE_GROUP:', ApiRouts.GROUPS_SAVE_GROUP(group.uri), group)
+          await GroupsController.saveGroup(
+            URLs.getURL(ApiRouts.GROUPS_SAVE_GROUP(group.uri)), 
+              this.state.username, 
+                this.state.token,
+                  group)
+          return true //запрос выполнен без ошибок
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('SAVE_GROUP failed', error);
+            return false //запрос НЕ выполнен
         }
       },
       //получение списка кандидатов
@@ -196,8 +213,8 @@ export const store = new Vuex.Store({
        *  1) New - ещё не нажата кнопка "выполнить поиск кандидатов"
        *  2) Search - робот ищет кандидатов. Признаки:
        *              1. Поле SearchParams не пустое
-       *              2. Поле candidates_count пустое или = НУЛЮ (не нашёл ещё никого)
-       *  3) Active - кандидаты найдены (Поле candidates_count содержит кол-во кандидатов)
+       *              2. Поле CandidatesCount пустое или = НУЛЮ (не нашёл ещё никого)
+       *  3) Active - кандидаты найдены (Поле CandidatesCount содержит кол-во кандидатов)
        *              на этом этапе работает HR с предоставленной выборкой
        *  4) Done - кампания закрыта, требуемые кадры наняты 
        * 
@@ -206,12 +223,12 @@ export const store = new Vuex.Store({
       var getGroupStatus = groups => {
         groups.forEach(element => {
           if ((element.SearchParams.lenght != 0) &&
-              (element.candidates_count == 0)) {
+              (element.CandidatesCount == 0)) {
                 element.Status = "Search";
                 return true;
               }
-          if (element.candidates_count != 0) {
-            element.Status = `Active: ${element.candidates_count}`;
+          if (element.CandidatesCount != 0) {
+            element.Status = `Active: ${element.CandidatesCount}`;
             return true;
           }
           if (element.Visible == false) {
@@ -221,10 +238,11 @@ export const store = new Vuex.Store({
         });
       }
 
+      /*
 var convertGroupAPItoSPA = (item, state) => {
   //в item содержится полученный объект, но он может быть не полным
   /*
-  candidates_count:0
+  CandidatesCount:0
   created:"Fri, 05 Apr 2019 09:02:27 GMT"
   employer:""
   position:""
@@ -234,6 +252,7 @@ var convertGroupAPItoSPA = (item, state) => {
   //1) переименовать поля полученный от бэк-енда (после согласования исключу этот п)
   //2) добавить поля которые НЕ присутствуют в ответе бэк-енда
   //3) добавленным в п 2 поляем присвоить значения по умолчанию
+  /*
   console.log('convertGroupAPItoSPA.input:', item)
   return item
   let g = new GroupTemplate (state.username)
@@ -250,7 +269,7 @@ var convertGroupAPItoSPA = (item, state) => {
 var convertGroupSPAtoAPI = (item) => {
   return item //закоментарить когда база быдут выдавать данные в оговорённом формате
   let g = {
-    candidates_count : 0,
+    CandidatesCount : 0,
     created:"",
     employer:"",
     position:"",
@@ -267,6 +286,7 @@ var convertGroupSPAtoAPI = (item) => {
   }
   /*
 */
+/*
   //{"position_var": "", "skills": "", "geo": "", "circles": "", "constraints": ""}
   g.employer = item.Employer
   g.created = item.Created
@@ -283,4 +303,4 @@ var convertGroupSPAtoAPI = (item) => {
   g.circles = item.Circles
   console.log('convertGroupSPAtoAPI:',g)
   return g
-}
+}*/
