@@ -192,18 +192,28 @@ export default {
             console.log('goToCompanyPage',group)
             this.$store.commit('enterToCampany', group);
         },
-        hideGroup(group){
-            console.log('hideGroup',group)
-            group.Visible = false
-            this.$store.dispatch('SAVE_GROUP',group)
+        async hideGroup(group){
+            try {
+                await this.$store.dispatch('SAVE_GROUP', {uri:group.uri, data:{Visible:false}})
+                group.Visible = false
+            } catch (err) {
+                console.log(`изменения не записались:  ${err}`)
+            }
         },
         copyGroup(group){
             console.log('copyGroup',group)
             group.Visible = true
         }, 
-        deleteGroup(group){
+        async deleteGroup(group){
             console.log('deleteGroup',group)
-            //this.$store.state.groups
+            try {
+                await this.$store.dispatch('DELETE_GROUP', group.uri)
+                //удаление на сервере прошло без ошибок, надо удалить у себя
+                //но это шляпа надо сделать через мутации
+                this.$store.state.groups.splice(this.$store.state.groups.indexOf(group),1)
+            } catch (err) {
+                console.log(`Группа не удалилась:  ${err}`)
+            }
         },               
         sortBy (key) {
             this.sortKey = key;

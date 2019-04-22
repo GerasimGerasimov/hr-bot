@@ -157,20 +157,35 @@ export const store = new Vuex.Store({
             console.log('CREATE_GROUP failed', error);
         }
       },
-      async SAVE_GROUP ({commit, dispatch}, group) {//сохранение изменённой информации о группе
+      async SAVE_GROUP ({commit, dispatch}, changes) {//сохранение изменённой информации о группе
         try {
-          console.log('SAVE_GROUP:', ApiRouts.GROUPS_SAVE_GROUP(group.uri), group)
-          await GroupsController.saveGroup(
-            URLs.getURL(ApiRouts.GROUPS_SAVE_GROUP(group.uri)), 
+          let uri = changes.uri
+          let data = changes.data
+          console.log('SAVE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri), data)
+          const result = await GroupsController.saveGroup(
+            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token,
-                  group)
-          return true //запрос выполнен без ошибок
+                  data)
+          return result
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('SAVE_GROUP failed', error);
-            return false //запрос НЕ выполнен
+            throw new Error(`'SAVE_GROUP failed': ${error}`)//поднимаю исключение выше
         }
       },
+      async DELETE_GROUP ({commit, dispatch}, uri) {//удаление группы
+        try {
+          console.log('DELETE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
+          const result = await GroupsController.deleteGroup(
+            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+              this.state.username, 
+                this.state.token)
+          return result
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('DELETE_GROUP failed', error);
+            throw new Error(`'DELETE_GROUP failed': ${error}`)//поднимаю исключение выше
+        }
+      },      
       //получение списка кандидатов
       GET_CANDIDATES ({commit}, payload) {
           console.log('GET_CANDIDATES:')
