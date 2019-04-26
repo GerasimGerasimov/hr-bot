@@ -188,9 +188,15 @@ export default {
         },
         //Получает выбранный в таблице объект Группа
         //Инициирует открытие страницы данных Группы с загрузкой соответсвущих полей
-        goToCompanyPage(group){
+        async goToCompanyPage(group){
             console.log('goToCompanyPage',group)
-            this.$store.commit('enterToCampany', group);
+            try {
+                let res = await this.$store.dispatch('GET_GROUP', group)
+                Object.assign(group, res)
+                this.$store.commit('enterToCampany', group);
+            } catch (err) {
+                console.log(`данные группы не прочитаны:  ${err}`)
+            }            
         },
         async hideGroup(group){
             try {
@@ -209,8 +215,7 @@ export default {
             try {
                 await this.$store.dispatch('DELETE_GROUP', group.uri)
                 //удаление на сервере прошло без ошибок, надо удалить у себя
-                //но это шляпа надо сделать через мутации
-                this.$store.state.groups.splice(this.$store.state.groups.indexOf(group),1)
+                this.$store.commit('deleteGroup', group);
             } catch (err) {
                 console.log(`Группа не удалилась:  ${err}`)
             }
@@ -268,7 +273,7 @@ export default {
             //    Captions:['Активные','Скрытые'], //данные TabSheets
             //    TabIndex:0-Активные (Visible = true), 1-Скрытые  (Visible = false)
             const reqGroups = (this.tabSheetsGroupsSelect.TabIndex == 0)?true:false
-            const data = this.$store.state.groups.filter(item => item.Visible === reqGroups)
+            var data = this.$store.state.groups.filter(item => item.Visible === reqGroups)
 
             console.log("filteredData: filterKey:",filterKey,
                                             " sortKey:",sortKey,

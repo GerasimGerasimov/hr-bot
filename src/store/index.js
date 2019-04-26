@@ -38,11 +38,9 @@ export const store = new Vuex.Store({
       updateGroups(state, value){
         state.groups = value;
       },
-      /**
-       * enterToGroups
-       * @param {*} state 
-       * @param {*} value - state.groups: [] - массив группы
-       */ 
+      deleteGroup(state, group){
+        state.groups.splice(state.groups.indexOf(group),1)
+      },
       setPageGroups(state) {
         state.pages = 'groups';//следующая страница - группы!
       },
@@ -57,19 +55,30 @@ export const store = new Vuex.Store({
         //показываю юзеру отрицательный результат
         this.state.wrongLogin = true
       },
-      enterToGroups(state, value) {//Группы загружены, требуется их отобразить
+      async enterToGroups(state, value) {//Группы загружены, требуется их отобразить
         console.log('enterToGroups==>:', value);
         state.groups = []
-        //надо преобразовать список объектов data/groups/1
-        //в массив key:data/groups/1 value=
+        //1) надо преобразовать список объектов data/groups/1
+        //   в массив key:data/groups/1 value=
         for (let item in value) {
           //в item содержится полученный объект, но он может быть не полным
-          console.log('Before {...value[item]}==>',value[item])
           let g = new GroupTemplate(state.username)
           g.uri = item //ссылка на группу
           Object.assign(g, value[item])//(g = {...value[item]})
           state.groups.push(g) 
         }
+        /*
+        //2) на выходе из п 1. у меня массив групп заполненных данными по умолчанию
+        //   теперь надо их заполнить из БД, для этого использую асинхронный цикл
+        //   так (на перспективу) смогу сделать информативный индикатор загрузки
+        for (let group of state.groups){
+          try {
+            Object.assign(group, await store.dispatch('GET_GROUP', group))
+          } catch (err) {
+            console.log(`не получил данные группы:  ${err}`)
+          }
+        }
+        */
         console.log('enterToGroups:result',state.groups)
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
       },
@@ -128,7 +137,8 @@ export const store = new Vuex.Store({
             commit('updatePages', 'login')           
         };
       },
-      //передаю имя, пароль и токен (после логина) получаю группы (кампании) этого пользователя
+      //передаю имя, пароль и токен (после логина)
+      //получаю СОКРАЩЁННУЮ информацию о группах этого пользователя
       async GET_USER_GROUPS ({commit, dispatch}, payload) {
         try {
           this.state.isLoading = true//показать индикатор загрузки
@@ -145,6 +155,22 @@ export const store = new Vuex.Store({
             commit('updatePages', 'login');
         }
       },
+      //Получаю инфу конкретной группы
+      async GET_GROUP ({commit, dispatch}, group) {
+        try {
+          let uri = group.uri
+          console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
+          const result = await GroupsController.getGroup(
+            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+              this.state.username, 
+                this.state.token)
+          return result
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('GET_GROUP failed', error);
+            throw new Error(`'GET_GROUP failed': ${error}`)//поднимаю исключение выше
+        }
+      },
+      //Создание групы      
       async CREATE_GROUP ({commit, dispatch}, payload) {
         try {
           console.log('CREATE_GROUP:')
