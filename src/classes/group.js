@@ -1,6 +1,7 @@
 export default class GroupTemplate {
     constructor (username) {
         this.CandidatesCount = 0 //кол-во кандидатов найденных БОТом (заполняется БОТом)
+        this.Candidates = {} //список кандидатов
         this.GroupName = '', //?! Я НЕ УВИДЕЛ ГДЕ БЫ ОНО ИСПОЛЬЗОВАЛОСЬ!!!
         this.Created = Date.now().toString() //дата создания группы  (формируется автоматически)
         this.SearchParams = '' //это строка поиска передаваемая БОТу[требуется БОТу]

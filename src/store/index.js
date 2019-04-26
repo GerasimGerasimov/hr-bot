@@ -23,9 +23,16 @@ export const store = new Vuex.Store({
         isLoading:false,//индикатор загрузки
         //
         groups: [], //группы
-        campany: {} //кампания
+        campany: {}, //кампания
+        candidates:[]//кандидаты
     },
     mutations: {
+      clearCandidates(state){
+        state.candidates = []
+      },
+      addCandidate(state, candidate){
+        state.candidates.push(candidate)
+      },
       updatePages(state, page){
         state.pages = page;
       },
@@ -55,7 +62,7 @@ export const store = new Vuex.Store({
         //показываю юзеру отрицательный результат
         this.state.wrongLogin = true
       },
-      async enterToGroups(state, value) {//Группы загружены, требуется их отобразить
+      enterToGroups(state, value) {//Группы загружены, требуется их отобразить
         console.log('enterToGroups==>:', value);
         state.groups = []
         //1) надо преобразовать список объектов data/groups/1
@@ -84,7 +91,7 @@ export const store = new Vuex.Store({
       },
       enterToCampany(state, value) {//вход в Кампанию
         console.log('enterToCampany:', value);
-        state.campany= value;//загрузить массив групп
+        state.campany= value;//
         state.pages = 'campany';//следующая страница - кампания!
       },
       logOut(state, value) {//разлогинится
@@ -160,21 +167,21 @@ export const store = new Vuex.Store({
         try {
           let uri = group.uri
           console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
-          const result = await GroupsController.getGroup(
+          const result = await GroupsController.get(
             URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token)
           return result
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_GROUP failed', error);
-            throw new Error(`'GET_GROUP failed': ${error}`)//поднимаю исключение выше
+            throw new Error(`GET_GROUP failed: ${error}`)//поднимаю исключение выше
         }
       },
       //Создание групы      
       async CREATE_GROUP ({commit, dispatch}, payload) {
         try {
           console.log('CREATE_GROUP:')
-          await GroupsController.addGroup(
+          await GroupsController.add(
             URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
               this.state.username, 
                 this.state.token,
@@ -188,7 +195,7 @@ export const store = new Vuex.Store({
           let uri = changes.uri
           let data = changes.data
           console.log('SAVE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri), data)
-          const result = await GroupsController.saveGroup(
+          const result = await GroupsController.put(
             URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token,
@@ -196,20 +203,34 @@ export const store = new Vuex.Store({
           return result
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('SAVE_GROUP failed', error);
-            throw new Error(`'SAVE_GROUP failed': ${error}`)//поднимаю исключение выше
+            throw new Error(`SAVE_GROUP failed: ${error}`)//поднимаю исключение выше
         }
       },
       async DELETE_GROUP ({commit, dispatch}, uri) {//удаление группы
         try {
           console.log('DELETE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
-          const result = await GroupsController.deleteGroup(
+          const result = await GroupsController.delete(
             URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token)
           return result
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('DELETE_GROUP failed', error);
-            throw new Error(`'DELETE_GROUP failed': ${error}`)//поднимаю исключение выше
+            throw new Error(`DELETE_GROUP failed: ${error}`)//поднимаю исключение выше
+        }
+      },      
+      //Получаю инфу конкретном кандидате
+      async GET_CANDIDATE ({commit, dispatch}, uri) {
+        try {
+          console.log('GET_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri))
+          const result = await CandidatesController.get(
+            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+              this.state.username, 
+                this.state.token)
+          return result
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('GET_CANDIDATE failed', error);
+            throw new Error(`GET_CANDIDATE failed: ${error}`)//поднимаю исключение выше
         }
       },      
       //получение списка кандидатов

@@ -92,6 +92,8 @@
 <script>
 import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
+import { format } from 'path';
+import Candidate from "../../classes/candidate.js"
 
 export default {
     data (){
@@ -105,12 +107,43 @@ export default {
         }
     },
     created: function(){
+        /*
         //загружу список кандидатов
         console.log('CompanyForm.created',this.$store.state.campany)
         if (!this.$store.state.campany.hasOwnProperty('uri'))
             this.$store.dispatch('GET_CANDIDATES')
+        */
+       this.getCandidatesData()
     },
     methods: {
+        async getCandidatesData(){
+            //почищу список кандидатов
+            this.$store.commit('clearCandidates')
+            //пока выведу список кандидатов
+            const campany = this.$store.state.campany
+            //создам массив API URL запросов данных Кандидатов
+            const uris = [] //массив URI ДБ кандидатов
+            for (let item in campany.Candidates){
+                uris.push(campany.Candidates[item])
+            }
+            //теперь зная ко-во кандидатов, можно сделать ProgressBar
+            //... в какой нибудь из спринтов
+            //Гружу даные кандидатов
+            //try/catch внутри цикла, чтобы грузились все возможные канидаты
+            //и цикл не останавливался на "битых" данных
+            for (let item of uris) {
+                try {
+                    let candidate = new Candidate()
+                    candidate = await this.$store.dispatch('GET_CANDIDATE', item)
+                    candidate.uri = item
+                    this.$store.commit('addCandidate',candidate)
+                    console.log(candidate)
+                }
+                catch (err){
+                    console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
+                }
+            }
+        },
         createGroup(){
             this.$store.dispatch('CREATE_GROUP')
         },

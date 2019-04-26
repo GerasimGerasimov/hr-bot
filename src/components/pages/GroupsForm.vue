@@ -155,7 +155,7 @@ export default {
         //Выбор действия для группы
         applyAction(group, action) {
             let doAction = {
-                'ENTRY'  : this.goToCompanyPage,
+                'ENTRY'  : this.entryToGroup,
                 'HIDE'   : this.hideGroup,
                 'COPY'   : this.copyGroup,
                 'DEL'    : this.deleteGroup,                            
@@ -188,12 +188,12 @@ export default {
         },
         //Получает выбранный в таблице объект Группа
         //Инициирует открытие страницы данных Группы с загрузкой соответсвущих полей
-        async goToCompanyPage(group){
-            console.log('goToCompanyPage',group)
+        async entryToGroup(group){
+            console.log('entryToGroup',group)
             try {
                 let res = await this.$store.dispatch('GET_GROUP', group)
-                Object.assign(group, res)
-                this.$store.commit('enterToCampany', group);
+                Object.assign(group, res) //дополняю группу полными данными из БД
+                this.$store.commit('enterToCampany', group);//даю команду перейти на страницу Группы
             } catch (err) {
                 console.log(`данные группы не прочитаны:  ${err}`)
             }            

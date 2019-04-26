@@ -15,7 +15,7 @@ export default class GroupsController {
 
     }
 
-    static async getGroup (url, username, token) {
+    static async get (url, username, token) {
         try {          
             console.log('getGroup')
             return await fetch (url, {
@@ -34,7 +34,7 @@ export default class GroupsController {
         }
     }    
 
-    static async addGroup (url, username, token, group) {
+    static async add (url, username, token, group) {
         try {          
             console.log('addGroup')
             return await fetch (url, {
@@ -54,9 +54,9 @@ export default class GroupsController {
         }
     }
     
-    static async saveGroup (url, username, token, changes) {
+    static async put (url, username, token, changes) {
         try {          
-            console.log('saveGroup', changes)
+            console.log('Save Group', changes)
             return await fetch (url, {
                     method: 'PUT',
                     //mode:"cors",
@@ -74,7 +74,7 @@ export default class GroupsController {
         }
     }
 
-    static async deleteGroup (url, username, token) {
+    static async delete (url, username, token) {
         try {          
             console.log('deleteGroup', url)
             return await fetch (url, {

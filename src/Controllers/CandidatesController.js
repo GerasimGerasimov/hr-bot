@@ -1,3 +1,11 @@
+import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
+
+const validationGetCandidateJSON = data => {
+    console.log('Get Candidate:data:',data)
+    return data
+}
+
+
 export default class CandidatesController {
     constructor () {
     }
@@ -34,9 +42,24 @@ export default class CandidatesController {
     }
 
     //получение данных конкретного кандидата
-    static async get () {
-
-    }    
+    static async get (url, username, token) {
+        try {          
+            console.log('get Candidate')
+            return await fetch (url, {
+                    method: 'GET',
+                    //mode:"cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
+                    }
+            })
+            .then (handledResponse)
+            .then (validationGetCandidateJSON)
+        } catch (error) {
+            console.log('Get Candidate:error',error)
+            throw new Error(`Get Candidate: Candidate info not read: ${error}`)
+        }
+    }   
 
     //изменение данных пользователя
     static async chahge () {
