@@ -84,7 +84,32 @@
                         :InitialTab = "0"
                         :onChangeTabIndex = "onChTabSheetsEmployersIndex"
             ></tab-sheets>
-            <div> Таблица </div>
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th
+                            v-for="item in getColumnsName" :key="item"
+                         >
+                        {{ item }}
+                        </th>
+                    </tr>
+                    </thead>                    
+                    <tbody>
+                    <tr v-for="candidate in filteredData" :key="candidate.filterKey" >
+                        <td>{{candidate.Cheked}}</td>
+                        <td>{{candidate.Status}}</td>
+                        <td>{{candidate.FullName}}</td>
+                        <td>{{candidate.Position}}</td>
+                        <td>{{candidate.Company}}</td>
+                        <td>
+                            <a :href=candidate.ProfileURI>GO</a>
+                        </td>
+                        <td>{{candidate.Note}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
@@ -101,9 +126,11 @@ export default {
             collapse: false,
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
-                Captions:['Избраные', 'Все', 'Ещё какие-то','Ф.И.О','Отборные!'], //данные TabSheets
+                Captions:['Избраные', 'Все'], //данные TabSheets
                 TabIndex:0
-            }
+            },
+            columns: ['Check', 'Статус', 'Имя', 'Должность', 'Место работы','URL','Примечание'],
+
         }
     },
     created: function(){
@@ -165,6 +192,12 @@ export default {
         }
     },
     computed: {
+        filteredData() {
+            return this.$store.state.candidates
+        },
+        getColumnsName(){
+            return this.columns;
+        },        
         getTabIndex() {
             console.log('watch:selectedTabSheet:',this.tabSheetsEmployersSelect.TabIndex)
         },
@@ -400,4 +433,37 @@ export default {
   opacity: 0;
   transform: scaleY(0)  scaleX(0);
 }
+/*Таблица*/
+table {
+  background-color: #fff;
+  width: 100%;
+  margin: 0 auto;
+}
+
+th {
+  background-color: var(--primary-color);
+  color: rgba(255,255,255,0.8);
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.6;  
+}
+
+td {
+  background-color: lavender;
+}
+
+th, td {
+  min-width: 100px;
+  padding: 10px 20px;
+}
+
+th.active {
+  color: white;
+  opacity: 1;
+}
+
+th.active .arrow {
+  opacity: 1;
+}
+
 </style>
