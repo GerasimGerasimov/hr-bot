@@ -1,7 +1,7 @@
 import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 const validationGetCandidateJSON = data => {
-    console.log('Get Candidate:data:',data)
+    //console.log('Get Candidate:data:',data)
     return data
 }
 
@@ -44,7 +44,7 @@ export default class CandidatesController {
     //получение данных конкретного кандидата
     static async get (url, username, token) {
         try {          
-            console.log('get Candidate')
+            //console.log('get Candidate')
             return await fetch (url, {
                     method: 'GET',
                     //mode:"cors",

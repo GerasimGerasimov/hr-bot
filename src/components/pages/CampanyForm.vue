@@ -96,9 +96,14 @@
                     </tr>
                     </thead>                    
                     <tbody>
-                    <tr v-for="candidate in filteredData" :key="candidate.filterKey" >
-                        <td>{{candidate.Cheked}}</td>
-                        <td>{{candidate.Status}}</td>
+                    <tr v-for="(candidate, index) in filteredData" :key="candidate.filterKey" >
+                        <td>
+                            <button
+                                class=""
+                                @click="onCheck(candidate)"
+                            >{{ candidate.Checked ? `&#x2611` : `&#x2610` }}</button>                             
+                        </td>
+                        <td>{{index + ' ' + candidate.Status}}</td>
                         <td>{{candidate.FullName}}</td>
                         <td>{{candidate.Position}}</td>
                         <td>{{candidate.Company}}</td>
@@ -143,6 +148,12 @@ export default {
        this.getCandidatesData()
     },
     methods: {
+        //&#x2610
+        //Unicode Character 'BALLOT BOX' (&#x2610)             ☐
+        //Unicode Character 'BALLOT BOX WITH CHECK' (&#x2611)  ☑  
+        onCheck(candidate){
+            candidate.Checked = !candidate.Checked
+        },
         async getCandidatesData(){
             //почищу список кандидатов
             this.$store.commit('clearCandidates')
@@ -164,7 +175,7 @@ export default {
                     candidate = await this.$store.dispatch('GET_CANDIDATE', item)
                     candidate.uri = item
                     this.$store.commit('addCandidate',candidate)
-                    console.log(candidate)
+                    //console.log(candidate)
                 }
                 catch (err){
                     console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
@@ -176,6 +187,7 @@ export default {
         },
         //клик по TabSheet. Требуется показать таблицу в соответствии с выбором
         onChTabSheetsEmployersIndex(index){
+            this.tabSheetsEmployersSelect.TabIndex = index
             console.log(`onChTabSheetsEmployersIndex:${index}`)
         },
         logOut(){
@@ -193,7 +205,9 @@ export default {
     },
     computed: {
         filteredData() {
-            return this.$store.state.candidates
+            const required = (this.tabSheetsEmployersSelect.TabIndex == 0)?true:false
+            var data = this.$store.state.candidates.filter(item => item.Checked === required)
+            return data
         },
         getColumnsName(){
             return this.columns;
