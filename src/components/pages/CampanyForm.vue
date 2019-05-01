@@ -99,9 +99,10 @@
                     <tr v-for="(candidate, index) in filteredData" :key="candidate.filterKey" >
                         <td>
                             <button
-                                class=""
+                                class="font-weight-900 font-size-24"
+                                :class="[candidate.Checked ? 'btn-check' : 'btn-uncheck']"
                                 @click="onCheck(candidate)"
-                            >{{ candidate.Checked ? `&#x2611` : `&#x2610` }}</button>                             
+                            ></button>                             
                         </td>
                         <td>{{index + ' ' + candidate.Status}}</td>
                         <td>{{candidate.FullName}}</td>
@@ -120,6 +121,8 @@
 </template>
 
 <script>
+//так я менял текст в кнопке
+//{{ candidate.Checked ? `&#x2611` : `&#x2610` }}
 import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
 import { format } from 'path';
@@ -131,7 +134,7 @@ export default {
             collapse: false,
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
-                Captions:['Избраные', 'Все'], //данные TabSheets
+                Captions:['Избраные', 'Остальные'], //данные TabSheets
                 TabIndex:0
             },
             columns: ['Check', 'Статус', 'Имя', 'Должность', 'Место работы','URL','Примечание'],
@@ -147,7 +150,7 @@ export default {
         */
        this.getCandidatesData()
     },
-    methods: {
+    methods: {    
         //&#x2610
         //Unicode Character 'BALLOT BOX' (&#x2610)             ☐
         //Unicode Character 'BALLOT BOX WITH CHECK' (&#x2611)  ☑  
@@ -478,6 +481,32 @@ th.active {
 
 th.active .arrow {
   opacity: 1;
+}
+
+.btn-check,
+.btn-uncheck
+ {
+  border: none;
+  color: inherit;
+  text-align: center;
+  background-color: transparent;
+  outline: none;
+  opacity: 0.6;
+} 
+
+.btn-check:hover,
+.btn-uncheck:hover {
+    opacity: 1;
+}
+
+.btn-check::before,
+.btn-uncheck:active::before{
+  content: "\2611"; 
+}
+
+.btn-uncheck::before,
+.btn-check:active::before {
+  content: "\2610"; 
 }
 
 </style>
