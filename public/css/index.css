@@ -111,3 +111,22 @@ button.__button:hover { /* при наведении курсора мышки *
 button.__button:active { /* при нажатии */
   opacity: 0.5; 
 }
+
+/*форма со спиннером индикатора загрузки*/
+.loading {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/*для img вложенного в элемент с классом loading */
+.loading img {
+  filter:alpha(Opacity=25);
+  opacity:0.35;
+  height:100%;
+  display: block;
+  margin: 0 auto;
+}

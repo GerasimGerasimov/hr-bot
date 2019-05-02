@@ -232,7 +232,23 @@ export const store = new Vuex.Store({
             console.log('GET_CANDIDATE failed', error);
             throw new Error(`GET_CANDIDATE failed: ${error}`)//поднимаю исключение выше
         }
-      },      
+      },
+      async SAVE_CANDIDATE ({commit, dispatch}, changes) {//сохранение изменённой информации о кандидате
+        try {
+          let uri = changes.uri
+          let data = changes.data
+          console.log('SAVE_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri), data)
+          const result = await CandidatesController.put(
+            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+              this.state.username, 
+                this.state.token,
+                  data)
+          return result
+        } catch(error) {//отрабатываю ошибку коннекта
+            console.log('SAVE_CANDIDATE failed', error);
+            throw new Error(`SAVE_CANDIDATE failed: ${error}`)//поднимаю исключение выше
+        }
+      },            
       //получение списка кандидатов
       GET_CANDIDATES ({commit}, payload) {
           console.log('GET_CANDIDATES:')

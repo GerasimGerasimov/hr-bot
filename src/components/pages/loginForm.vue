@@ -84,7 +84,7 @@ export default {
     wrongLogin () {
       return this.$store.getters.wrongLogin;
     },
-    //loading = true - запускает спинне ожидания ответа сервера
+    //loading = true - запускает спиннер ожидания ответа сервера
     loading () {//индикатор загрузки
       return this.$store.getters.loading;
     },
@@ -132,24 +132,6 @@ export default {
     box-shadow: 0px 5px 10px 1px rgba(0,0,0,0.1);/* Параметры тени */
     border-radius: 4px;
     position: relative;
-  }
-
-  .loading {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.02);
-  }
-
-  /*для img вложенного в элемент с классом loading */
-  .loading img {
-    filter:alpha(Opacity=25);
-    opacity:0.35;
-    height:100%;
-    display: block;
-    margin: 0 auto;
   }
 
   .form + div.form{

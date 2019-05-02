@@ -37,9 +37,9 @@ export default {
     },
     watch: {
         Summary: function(){
-            this.TextAreaHeight = "auto";//сначала ставлю высоту автоматическую
-                                           //чтобы высота уменьшилась! если высота текста
-                                           //уменьшилась
+            this.TextAreaHeight = "auto"//сначала ставлю высоту автоматическую
+                                        //чтобы высота уменьшилась! если высота текста
+                                        //уменьшилась
             //а потом, сделаю высоту такой какая требуется (вычисленная из scrollHeight)
             this.$nextTick(function() {
                 this.TextAreaHeight = this.TextArea.scrollHeight +"px";

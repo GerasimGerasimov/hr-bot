@@ -61,8 +61,23 @@ export default class CandidatesController {
         }
     }   
 
-    //изменение данных пользователя
-    static async chahge () {
-
+    static async put (url, username, token, changes) {
+        try {          
+            console.log('Save Candidate', changes)
+            return await fetch (url, {
+                    method: 'PUT',
+                    //mode:"cors",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Basic ${btoa(`${username}:${token}`)}` 
+                    },
+                    body: JSON.stringify(changes)
+            })
+            .then (handledResponse)
+            .then (validationGetCandidateJSON)
+        } catch (error) {
+            console.log('putCandidate:error',error)
+            throw new Error(`put.Canditate data not changed: ${error}`)
+        }
     }       
 }
