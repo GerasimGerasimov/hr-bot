@@ -73,7 +73,14 @@
                 </auto-height-text-area>
             </div>                                                         
         </div>
-        <div class="campany-form pt8">
+        <div class="form campany-form pt8">
+            <!-- индикатор загрузки/ожидания изменений-->
+            <div class="_loading" v-show="loading"
+            >
+                <img
+                    src="/img/spinner-icon-0.gif"
+                    alt="">
+            </div>             
             <div class="menu">
                 <p class="menu-text font-size-16 font-weight-600">Кандидаты</p>
                 <div class="line" style="width:90%"></div>
@@ -101,8 +108,8 @@
                             <button
                                 class="font-weight-900 font-size-24"
                                 :class="[candidate.Checked ? 'btn-check' : 'btn-uncheck']"
-                                @click="onCheck(candidate)"
-                            ></button>                             
+                                @click="changeChecked(candidate)"
+                            ></button>                                                       
                         </td>
                         <td>{{index + ' ' + candidate.Status}}</td>
                         <td>{{candidate.FullName}}</td>
@@ -127,10 +134,12 @@ import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
 import { format } from 'path';
 import Candidate from "../../classes/candidate.js"
+import { constants } from 'crypto';
 
 export default {
     data (){
         return {
+            loading:false, //индикатор ожидания
             collapse: false,
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
@@ -150,13 +159,22 @@ export default {
         */
        this.getCandidatesData()
     },
-    methods: {    
+    methods: { 
         //&#x2610
         //Unicode Character 'BALLOT BOX' (&#x2610)             ☐
         //Unicode Character 'BALLOT BOX WITH CHECK' (&#x2611)  ☑  
-        onCheck(candidate){
-            candidate.Checked = !candidate.Checked
-        },
+        //сменить состояние Chek/Uncheck на противоположное
+        async changeChecked(candidate){
+            this.loading = true
+            try {
+                await this.$store.dispatch('SAVE_CANDIDATE', {uri:candidate.uri, data:{Checked:!candidate.Checked}})
+                candidate.Checked = !candidate.Checked
+                this.loading = false
+            } catch (err) {
+                console.log(`изменения не записались:  ${err}`)
+                this.loading = false
+            }
+        },        
         async getCandidatesData(){
             //почищу список кандидатов
             this.$store.commit('clearCandidates')
@@ -450,6 +468,35 @@ export default {
   opacity: 0;
   transform: scaleY(0)  scaleX(0);
 }
+
+.form {
+    position: relative;
+}
+
+/*форма со спиннером индикатора загрузки*/
+._loading {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+/*для img вложенного в элемент с классом loading */
+._loading img {
+  filter:alpha(Opacity=35);
+  opacity:0.35;
+  height:100px;
+  display: block;
+  position: absolute;
+  top: 20px;/*50%;*/
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%)
+}
+
 /*Таблица*/
 table {
   background-color: #fff;
@@ -510,3 +557,20 @@ th.active .arrow {
 }
 
 </style>
+
+/*
+        machTableHeight(){
+            console.log(this.$refs.CompanyFormHeader)
+            let haderHeight = this.$refs.CompanyFormHeader.clientHeight
+            let infoHeight  = this.$refs.CompanyFormInfo.clientHeight
+            let windowHeight = document.documentElement.clientHeight
+            this.SpinnerFormHeight = windowHeight - infoHeight - haderHeight
+            console.log(`
+            haderHeight  = ${haderHeight}px
+            infoHeight   = ${infoHeight}px
+            windowHeight = ${windowHeight}px
+            SpinnerHeight= ${this.SpinnerFormHeight}px
+            `
+            )
+        },  
+*/
