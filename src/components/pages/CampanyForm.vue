@@ -105,18 +105,23 @@
                     <tbody>
                     <tr v-for="(candidate, index) in filteredData" :key="candidate.filterKey" >
                         <td>
-                            <button
+                            <p
                                 class="font-weight-900 font-size-24"
                                 :class="[candidate.Checked ? 'btn-check' : 'btn-uncheck']"
                                 @click="changeChecked(candidate)"
-                            ></button>                                                       
+                            ></p>                                                       
                         </td>
-                        <td>{{index + ' ' + candidate.Status}}</td>
+                        <td>
+                            <p 
+                              :class=StatusCell.Icon(candidate.Status)
+                              :title=StatusCell.Title(candidate.Status)
+                            ></p>
+                        </td>
                         <td>{{candidate.FullName}}</td>
                         <td>{{candidate.Position}}</td>
                         <td>{{candidate.Company}}</td>
-                        <td>
-                            <a :href=candidate.ProfileURI>GO</a>
+                        <td align="center">
+                          <a class="linkedIn" target="_blank" :href=candidate.ProfileURI></a>
                         </td>
                         <td>{{candidate.Note}}</td>
                     </tr>
@@ -140,6 +145,7 @@ export default {
     data (){
         return {
             loading:false, //индикатор ожидания
+            StatusCell:this.getStatusCell(),
             collapse: false,
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
@@ -238,6 +244,26 @@ export default {
         },
         getCollapseArrow () {
             return (this.collapse)?'\u25BC':'\u25B2';
+        },
+        getStatusCell(status){
+            //spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение
+            //handshake	f2b5  = InvitationAccepted Кандидат принял предложение
+            //comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение
+           const states = {
+               'Added':'status-added fa-spin',
+               'InvitationAccepted':'status-accepded',
+               'PrivateMessageRespond':'status-respond',
+               'default':'status-default'
+           }
+    
+           return {
+               Icon: function(status) {
+                   return (states[status] || states['default'])
+               },
+               Title: function (status){
+                   return 'Hi!'
+               }
+           } 
         }
     },
     computed: {
@@ -336,6 +362,45 @@ export default {
 </script>
 
 <style scoped>
+  .linkedIn {
+    text-decoration: none;
+    color:#0073b1;
+    text-decoration: none;
+    font-family: 'FontAwesome';
+    font-weight: 900;
+    font-size: 24px;    
+  }
+  .linkedIn::after {
+    content: "\f08c";
+  }
+
+  /*spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение*/
+  /*handshake	f2b5  = InvitationAccepted Кандидат принял предложение*/
+  /*comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение*/
+
+  .status-added,
+  .status-accepded,
+  .status-respond,
+  .status-default{
+    /*color:#0073b1;*/
+    font-family: 'FontAwesome';
+    font-weight: 900;
+    font-size: 24px;
+    text-align: center; /*иначе иконка вращается по большому радиусу*/    
+  }
+
+  .status-added::before {/*spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение*/
+    content: "\f110";
+  }
+  .status-accepded::before {/*handshake	f2b5  = InvitationAccepted Кандидат принял предложение*/
+    content: "\f2b5";
+  }
+  .status-respond::before {/*comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение*/
+    content: "\f086";
+  }  
+  .status-default::before {/*default  f059 = Статус Кандидата неопределён*/
+    content: "\f059";
+  } 
   .container {
     color: var(--secondary-color);
     background: white;
@@ -560,6 +625,7 @@ th.active .arrow {
 .btn-check:hover,
 .btn-uncheck:hover {
     opacity: 1;
+    text-align: center; 
 }
 
 .btn-check::before,
