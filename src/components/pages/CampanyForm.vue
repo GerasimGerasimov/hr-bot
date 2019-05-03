@@ -160,7 +160,23 @@ export default {
        this.getCandidatesData()
     },
     methods: { 
-        //&#x2610
+        //Подбор иконок
+        //иконки https://fontawesome.com/cheatsheet?from=io
+        //как подключать к Vue:
+        //  https://ru.stackoverflow.com/questions/866522/%D0%9F%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-font-awesome-%D0%B2-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B5-%D0%BD%D0%B0-vue-js?answertab=active#tab-top
+        //--- Состояния Кандидата ---
+        //spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение
+        //handshake	f2b5  = InvitationAccepted Кандидат принял предложение
+        //comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение
+        //--- Операции с группами ---
+        //	clone	    f24d = создать группу используя шаблон
+        //	folder-plus	f65e = создать группу (с нуля)
+        //	trash-alt	f2ed = удалить группу
+        // eye-slash	f070 = скрыть 
+        //	folder-open	f07c = открыть группу
+        //--- Ссылка на LinkedIn Кандидата ---
+        //	linkedin	f08c
+        //	linkedin-in	f0e1
         //Unicode Character 'BALLOT BOX' (&#x2610)             ☐
         //Unicode Character 'BALLOT BOX WITH CHECK' (&#x2611)  ☑  
         //сменить состояние Chek/Uncheck на противоположное

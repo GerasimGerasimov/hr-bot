@@ -15,7 +15,7 @@
       </div>
       <div><span>Поиск и работа с кандидатами в LinkedIn</span></div>
     </div>
-    <p class="inline-center m20 c-secondary font-size-24">
+    <p class="linkedIn inline-center m20 c-secondary font-size-24">
       Войдите чтобы продолжить работу
     </p>
     <div class="form">
@@ -110,6 +110,12 @@ export default {
 </script>
 
 <style scoped>
+  .linkedIn::after {
+    font-family: 'FontAwesome';
+    font-weight: 900;
+    content: "\f0e1";
+  }
+
   .header {
     /*background-color: lightgray;*/
     /*background: repeating-radial-gradient(circle, var(--info-color), var(--accent-color) 10px, var(--accent-color) 10px, var(--accent-color) 20px);*/
