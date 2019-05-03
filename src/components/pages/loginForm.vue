@@ -111,6 +111,7 @@ export default {
 
 <style scoped>
   .linkedIn::after {
+    color:#0073b1;
     font-family: 'FontAwesome';
     font-weight: 900;
     content: "\f0e1";

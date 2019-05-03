@@ -250,18 +250,25 @@ export default {
             //handshake	f2b5  = InvitationAccepted Кандидат принял предложение
             //comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение
            const states = {
-               'Added':'status-added fa-spin',
-               'InvitationAccepted':'status-accepded',
-               'PrivateMessageRespond':'status-respond',
-               'default':'status-default'
+               'Added':{
+                   class:'status-added fa-spin',
+                   title:'Кандидат добавлен но ещё НЕ принял приглашение'},
+               'InvitationAccepted':{
+                   class:'status-accepded',
+                   title:'Кандидат принял предложение'},
+               'PrivateMessageRespond':{
+                   class:'status-respond',
+                   title:'Кандидат ответил на личное сообщение'},
+               'default':{
+                   class:'status-default',
+                   title:'Статус Кандидата не определён'}
            }
-    
-           return {
+            return {
                Icon: function(status) {
-                   return (states[status] || states['default'])
+                   return (states[status].class || states['default'].class)
                },
                Title: function (status){
-                   return 'Hi!'
+                   return (states[status].title || states['default'].title)
                }
            } 
         }
