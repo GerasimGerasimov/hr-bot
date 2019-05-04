@@ -67,7 +67,7 @@
                     <td>{{group.Created}}</td>
                     <td>{{group.Location}}</td>
                     <td>{{group.Status}}</td>
-                    <td @click="onClickToolCell(group)">
+                    <td style="width: 130px;" @click="onClickToolCell(group)">
                         <icons-tool-bar
                             :Captions = "IconsToolBarData.ToolsData.Active"
                             :onClkToolBtn ="onClickToolBarButtons"
@@ -121,11 +121,17 @@ export default {
                 TabIndex:0
             },
             IconsToolBarData: {
+            //--- Операции с группами ---
+            //	clone	    f24d = создать группу используя шаблон
+            //	folder-plus	f65e = создать группу (с нуля)
+            //	trash-alt	f2ed = удалить группу
+            // eye-slash	f070 = скрыть 
+            //	folder-open	f07c = открыть группу
                 ToolsData: {
-                    Active:[ {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
-                             {action:'DEL',   icon:'DELETE', title:'Удалить группу'},
-                             {action:'COPY',  icon:'COPY',   title:'Создать группу на основе этой'},
-                             {action:'HIDE',  icon:'HIDE',   title:'Скрыть группу'}
+                    Active:[ {action:'ENTRY', icon:'\uf07c', title:'Войти в группу'},
+                             {action:'COPY',  icon:'\uf24d', title:'Создать группу на основе этой'},
+                             {action:'HIDE',  icon:'\uf070', title:'Скрыть группу'},
+                             {action:'DEL',   icon:'\uf1f8', title:'Удалить группу'}
                     ],
                     Hide:[   {action:'ENTRY', icon:'ENTRY',  title:'Войти в группу'},
                              {action:'DEL',   icon:'DELETE', title:'Удалить группу'},

@@ -103,10 +103,10 @@
                     </tr>
                     </thead>                    
                     <tbody>
-                    <tr v-for="(candidate, index) in filteredData" :key="candidate.filterKey" >
-                        <td>
+                    <tr v-for="candidate in filteredData" :key="candidate.filterKey" >
+                        <td align="center">
                             <p
-                                class="font-weight-900 font-size-24"
+                                class="p-status font-weight-900 font-size-24"
                                 :class="[candidate.Checked ? 'btn-check' : 'btn-uncheck']"
                                 @click="changeChecked(candidate)"
                             ></p>                                                       
@@ -174,12 +174,6 @@ export default {
         //spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение
         //handshake	f2b5  = InvitationAccepted Кандидат принял предложение
         //comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение
-        //--- Операции с группами ---
-        //	clone	    f24d = создать группу используя шаблон
-        //	folder-plus	f65e = создать группу (с нуля)
-        //	trash-alt	f2ed = удалить группу
-        // eye-slash	f070 = скрыть 
-        //	folder-open	f07c = открыть группу
         //--- Ссылка на LinkedIn Кандидата ---
         //	linkedin	f08c
         //	linkedin-in	f0e1
@@ -369,6 +363,10 @@ export default {
 </script>
 
 <style scoped>
+  .p-status {
+      width: 32px;
+  } 
+  
   .linkedIn {
     text-decoration: none;
     color:#0073b1;
@@ -379,6 +377,11 @@ export default {
   }
   .linkedIn::after {
     content: "\f08c";
+  }
+
+  .linkedIn:hover {
+    text-shadow: 0 0 15px rgba(0,0,255,.5), 
+                 0 0 10px rgba(0,0,255,.5);
   }
 
   /*spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение*/
@@ -394,6 +397,14 @@ export default {
     font-weight: 900;
     font-size: 24px;
     text-align: center; /*иначе иконка вращается по большому радиусу*/    
+  }
+
+  .status-added:hover,
+  .status-accepded:hover,
+  .status-respond:hover,
+  .status-default:hover{
+    text-shadow: 0 0 15px rgba(0,0,255,.5), 
+                 0 0 10px rgba(0,0,255,.5);
   }
 
   .status-added::before {/*spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение*/
@@ -632,7 +643,9 @@ th.active .arrow {
 .btn-check:hover,
 .btn-uncheck:hover {
     opacity: 1;
-    text-align: center; 
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0,0,255,.5), 
+                 0 0 10px rgba(0,0,255,.5); 
 }
 
 .btn-check::before,
