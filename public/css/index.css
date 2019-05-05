@@ -130,3 +130,31 @@ button.__button:active { /* при нажатии */
   display: block;
   margin: 0 auto;
 }
+
+.p-relative{
+  position: relative;
+}
+
+/*форма со спиннером индикатора загрузки*/
+.wait_loading {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+/*для img вложенного в элемент с классом loading */
+.wait_loading img {
+  filter:alpha(Opacity=35);
+  opacity:0.35;
+  height:100px;
+  display: block;
+  position: absolute;
+  top: 20px;/*положение спинера*/
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%)
+}

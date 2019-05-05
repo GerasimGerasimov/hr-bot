@@ -14,6 +14,6 @@ const DIST_ROOT = "http://hrhelper.ru/"
 
 function getURL(url){
     let _url = DEBUG_MODE?(DEV_ROOT+url):(DIST_ROOT+url);
-    console.log("getUrl:",_url);
+    //console.log("getUrl:",_url);
     return _url;
 }

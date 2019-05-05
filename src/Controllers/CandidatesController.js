@@ -15,8 +15,8 @@ export default class CandidatesController {
     //если будут ошибки то в выборку попадают те кто загрузился без ошибок
     static async getList(url, idList) {
         url+='/Candidates'
-        console.log('CandidatesController.getList.url:',url)
-        console.log('CandidatesController.getList:',idList)
+        //console.log('CandidatesController.getList.url:',url)
+        //console.log('CandidatesController.getList:',idList)
         let header = {//Заголовок
             method: 'GET', //заменить на POST!!!
             //body: JSON.stringify({
@@ -63,7 +63,7 @@ export default class CandidatesController {
 
     static async put (url, username, token, changes) {
         try {          
-            console.log('Save Candidate', changes)
+            //console.log('Save Candidate', changes)
             return await fetch (url, {
                     method: 'PUT',
                     //mode:"cors",

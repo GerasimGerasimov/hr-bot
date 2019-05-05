@@ -57,7 +57,7 @@ export default {
         background-color: var(--primary-color);
         opacity: 0.6;  
         color: white; 
-        /*box-shadow: 0 2px 5px 0 rgba(0,0,0,1.0);*/
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,1.0);
         text-shadow: 0 0 15px rgba(0,0,255,.5), 
                      0 0 10px rgba(0,0,255,.5);
     }

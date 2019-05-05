@@ -37,13 +37,17 @@
                 </button>
             </nav>
         </div>
-        <div>
-            <center><h1 class="font-size-24 ml20">Группы</h1></center>
+        <div class="p-relative">
+            <!-- индикатор загрузки/ожидания изменений-->
+            <center><h1 class="font-size-24 ml20">Группы</h1></center>           
             <tab-sheets :Captions = "tabSheetsGroupsSelect.Captions"
                         :InitialTab = "0"
                         :onChangeTabIndex = "onClickTabSheets"
             ></tab-sheets>
-              <table>
+              <table  class="p-relative">
+                    <div class="wait_loading" v-show="loading">
+                        <img src="/img/spinner-icon-0.gif" alt="Загрузка...">
+                    </div>  
                 <thead>
                 <tr>
                     <th
@@ -85,10 +89,12 @@ import SearchInput   from "../ui/VSearchInput.vue"
 import GroupTemplate from "../../classes/group.js"
 import TabSheets from '../ui/VTabSheets.vue'
 import IconsToolBar from '../ui/VIconsToolBar.vue'
+import { async } from 'q';
 
 export default {
     data (){
         return {
+            loading:false, //индикатор ожидания
             columns: ['Employer', 'Position', 'Created', 'Location', 'Status','Действия'],
             sortKey: '',
             sortDirections:'up',//'down'
@@ -147,10 +153,49 @@ export default {
             }
         }
     },
-    created() {
-        this.$store.dispatch('GET_USER_GROUPS')
+    async created() {
+        await this.$store.dispatch('GET_USER_GROUPS')//получаю сокращённую инфу о группах
+        //а теперь полную
+        this.getGroupsData()
     },
     methods: {
+        async getGroupsData(){
+            //пока выведу список групп
+            const groups = this.$store.state.groups
+            console.log('getGroupsData()=>',groups)
+            //создам массив API URL запросов данных Групп
+            const list = [] //массив URI ДБ Групп
+            for (let item in groups){
+                list.push({group:groups[item], uri: groups[item].uri})
+            }
+            console.log('getGroupsData().list=>',list)
+            //теперь зная ко-во Групп, можно сделать ProgressBar
+            //... в какой нибудь из спринтов
+            //Гружу даные Групп
+            //try/catch внутри цикла, чтобы грузились все возможные Группы
+            //и цикл не останавливался на "битых" данных
+            try {
+                this.loading = true
+                const load = async () => {
+                    for (let item of list) {
+                        try {
+                            let group = item.group;//new  GroupTemplate()
+                            let result= await this.$store.dispatch('GET_GROUP', item.uri)
+                            //группы у меня уже есть, нужно их дополнить прочитанными данными
+                            this.$store.commit('updateGroupData',{group, newdata:result[item.uri]})
+                        }
+                        catch (err){
+                            console.log(`данные Группы ${item} не прочитаны:  ${err}`)
+                        }
+                    }
+                }
+                const result = await load()
+                this.loading = false
+            }
+            catch (err) {
+                this.loading = false
+            }
+        },
         //при клике на ячейке c кнопками-actions, ячейка знает группу group
         //Когда юзер кликнул на ToolBar, то в Action попадает инфа о нажатой
         //кнопки в ToolBar`e. Так зная group и action можно производить
@@ -197,8 +242,8 @@ export default {
         async entryToGroup(group){
             console.log('entryToGroup',group)
             try {
-                let res = await this.$store.dispatch('GET_GROUP', group)
-                Object.assign(group, res) //дополняю группу полными данными из БД
+                let res = await this.$store.dispatch('GET_GROUP', group.uri)
+                Object.assign(group, res[group.uri]) //дополняю группу полными данными из БД
                 this.$store.commit('enterToCampany', group);//даю команду перейти на страницу Группы
             } catch (err) {
                 console.log(`данные группы не прочитаны:  ${err}`)

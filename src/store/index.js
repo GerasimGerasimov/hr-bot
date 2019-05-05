@@ -107,21 +107,31 @@ export const store = new Vuex.Store({
       updateGroupEmployer(state, value){
         state.campany.Employer = value;
       },
-      updateGroupPosition(state, value){
-        state.campany.Position = value;
+      updateGroupData(state, value){
+        console.log('updateGroupData',value.group,value.newdata)
+        Object.assign(value.group,value.newdata)
       },
+      updateGroup  (state, value){
+        state.campany.Position = value
+      },
+      updateGroupPosition(state, value){
+        state.campany.Position = value
+      },  
+      updateGroupTitle(state, value){
+        state.campany.Title = value
+      },      
       updateGroupSkills(state, value){
-        state.campany.Skills = value;
+        state.campany.Skills = value
       },
       updateGroupMessageTemplate(state, value){
-        state.campany.MessageTemplate = value;
+        state.campany.MessageTemplate = value
       },
       updateGroupLocation(state, value){
-        state.campany.Location = value;
+        state.campany.Location = value
         console.log(state.campany.Location)
       },
       updateGroupCircles(state, value){
-        state.campany.Circles = value;
+        state.campany.Circles = value
       },
       updateGroupExceptions(state, value){
         state.campany.Exceptions = value;
@@ -155,7 +165,8 @@ export const store = new Vuex.Store({
                 this.state.token)
           console.log('GET_GROUPS:', groups)
           this.state.isLoading = false//скрыть индикатор загрузки
-          commit('enterToGroups',groups);
+          commit('enterToGroups',groups)
+          return groups
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('GET_GROUPS failed', error);
             commit('setWrongLogin')//состояние ошибки при логине
@@ -163,9 +174,8 @@ export const store = new Vuex.Store({
         }
       },
       //Получаю инфу конкретной группы
-      async GET_GROUP ({commit, dispatch}, group) {
+      async GET_GROUP ({commit, dispatch}, uri) {
         try {
-          let uri = group.uri
           console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await GroupsController.get(
             URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
@@ -180,7 +190,7 @@ export const store = new Vuex.Store({
       //Создание групы      
       async CREATE_GROUP ({commit, dispatch}, payload) {
         try {
-          console.log('CREATE_GROUP:')
+          console.log('CREATE_GROUP:', this.state.campany)
           await GroupsController.add(
             URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
               this.state.username, 
@@ -222,7 +232,7 @@ export const store = new Vuex.Store({
       //Получаю инфу конкретном кандидате
       async GET_CANDIDATE ({commit, dispatch}, uri) {
         try {
-          console.log('GET_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri))
+          //console.log('GET_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await CandidatesController.get(
             URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 

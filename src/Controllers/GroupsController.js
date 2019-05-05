@@ -1,8 +1,9 @@
 import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 const validationGetGroupJSON = data => {
+    if (!data.hasOwnProperty('data'))       throw new PropertyRequiredError('data')
     console.log('GetGroup:data:',data)
-    return data
+    return data.data
 }
 
 const validationAddGroupJSON = data => {

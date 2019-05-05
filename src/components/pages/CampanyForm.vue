@@ -32,9 +32,13 @@
                     <input type="text" v-model="Employer">
                 </div>
                 <div class="value-block">
-                    <input type="label" class="font-size-16 font-weight-600" value="Должность">
+                    <input type="label" class="font-size-16 font-weight-600" value="Вакансия">
                     <input type="text" v-model="Position">
                 </div>  
+                <div class="value-block">
+                    <input type="label" class="font-size-16 font-weight-600" value="Должность|Title">
+                    <input type="text" v-model="Title">
+                </div>                  
                 <div class="value-block">
                     <input type="label" class="font-size-16 font-weight-600" value="Опыт">
                     <textarea class="font-size-16" v-model="Skills"></textarea>
@@ -73,13 +77,10 @@
                 </auto-height-text-area>
             </div>                                                         
         </div>
-        <div class="form campany-form pt8">
+        <div class="p-relative campany-form pt8">
             <!-- индикатор загрузки/ожидания изменений-->
-            <div class="_loading" v-show="loading"
-            >
-                <img
-                    src="/img/spinner-icon-0.gif"
-                    alt="">
+            <div class="wait_loading" v-show="loading">
+                <img src="/img/spinner-icon-0.gif" alt="Загрузка...">
             </div>             
             <div class="menu">
                 <p class="menu-text font-size-16 font-weight-600">Кандидаты</p>
@@ -206,17 +207,28 @@ export default {
             //Гружу даные кандидатов
             //try/catch внутри цикла, чтобы грузились все возможные канидаты
             //и цикл не останавливался на "битых" данных
-            for (let item of uris) {
-                try {
-                    let candidate = new Candidate()
-                    candidate = await this.$store.dispatch('GET_CANDIDATE', item)
-                    candidate.uri = item
-                    this.$store.commit('addCandidate',candidate)
-                    //console.log(candidate)
+            try {
+                this.loading = true
+                const load = async () => {
+                    for (let item of uris) {
+                        try {
+                            let candidate = new Candidate()
+                            candidate = await this.$store.dispatch('GET_CANDIDATE', item)
+                            candidate.uri = item
+                            this.$store.commit('addCandidate',candidate)
+                            //console.log(candidate)
+                        }
+                        catch (err){
+                            console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
+                        }
+                    }
                 }
-                catch (err){
-                    console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
-                }
+                console.log('load:=>', load())
+                const result = await load()
+                this.loading = false
+            }
+            catch (err) {
+                this.loading = false
             }
         },
         createGroup(){
@@ -283,7 +295,7 @@ export default {
             get() {
                 let res = '';
                 res +=this.$store.state.campany.hasOwnProperty('Employer')?(this.$store.state.campany.Employer+'\n'):'';
-                res +=this.$store.state.campany.hasOwnProperty('Position')?(this.$store.state.campany.Position+'\n'):'';
+                res +=this.$store.state.campany.hasOwnProperty('Title')?(this.$store.state.campany.Title+'\n'):'';
                 res +=this.$store.state.campany.hasOwnProperty('Skills')?(this.$store.state.campany.Skills+'\n'):'';
                 res +=this.$store.state.campany.hasOwnProperty('Location')?(this.$store.state.campany.Location):'';
                 return res;
@@ -307,6 +319,14 @@ export default {
                 this.$store.commit('updateGroupPosition', value);
             }
         },
+        Title:{
+            get() {
+                return this.$store.state.campany.hasOwnProperty('Title')?this.$store.state.campany.Title:''; 
+            },
+            set (value) {
+                this.$store.commit('updateGroupTitle', value);
+            }
+        },        
         Skills:{
             get() {
                 return this.$store.state.campany.hasOwnProperty('Skills')?this.$store.state.campany.Skills:''; 
@@ -366,7 +386,7 @@ export default {
   .p-status {
       width: 32px;
   } 
-  
+
   .linkedIn {
     text-decoration: none;
     color:#0073b1;
@@ -566,34 +586,6 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
   transform: scaleY(0)  scaleX(0);
-}
-
-.form {
-    position: relative;
-}
-
-/*форма со спиннером индикатора загрузки*/
-._loading {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 9999;
-}
-
-/*для img вложенного в элемент с классом loading */
-._loading img {
-  filter:alpha(Opacity=35);
-  opacity:0.35;
-  height:100px;
-  display: block;
-  position: absolute;
-  top: 20px;/*50%;*/
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, 0%)
 }
 
 /*Таблица*/
