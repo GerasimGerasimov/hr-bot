@@ -33,8 +33,14 @@ export const store = new Vuex.Store({
       addCandidate(state, candidate){
         state.candidates.push(candidate)
       },
+      addCandidates(state, candidates){
+        state.candidates = candidates
+      },      
       updatePages(state, page){
         state.pages = page;
+      },
+      updateUsername(state, value){
+        state.username = value;
       },
       updateEmail(state, value){
         state.email = value;

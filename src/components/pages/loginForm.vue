@@ -29,9 +29,9 @@
             </p>
           </transition>
           <input
-            type="email"
-            v-model.lazy = "email"
-            placeholder="email"
+            type="text"
+            v-model.lazy = "username"
+            placeholder="username"
           >
           <input
             type="password"
@@ -89,12 +89,12 @@ export default {
       return this.$store.getters.loading;
     },
     //email 
-    email:{
+    username:{
       get() {
-        return this.$store.state.email;
+        return this.$store.state.username;
       },
       set (value) {
-        this.$store.commit('updateEmail', value);
+        this.$store.commit('updateUsername', value);
       }
     },
     password:{

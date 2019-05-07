@@ -207,6 +207,7 @@ export default {
             //Гружу даные кандидатов
             //try/catch внутри цикла, чтобы грузились все возможные канидаты
             //и цикл не останавливался на "битых" данных
+            var candidates = [] //массив для накопления кандидатов ;-)
             try {
                 this.loading = true
                 const load = async () => {
@@ -215,16 +216,16 @@ export default {
                             let candidate = new Candidate()
                             candidate = await this.$store.dispatch('GET_CANDIDATE', item)
                             candidate.uri = item
-                            this.$store.commit('addCandidate',candidate)
-                            //console.log(candidate)
+                            candidates.push(candidate)
                         }
                         catch (err){
                             console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
                         }
                     }
                 }
-                console.log('load:=>', load())
+                //console.log('load:=>', load()) неудачная попытка перехватить Promise
                 const result = await load()
+                this.$store.commit('addCandidates',candidates)
                 this.loading = false
             }
             catch (err) {
