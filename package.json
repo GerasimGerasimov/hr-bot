@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "vue": "^2.6.6",
+    "vuedals": "^1.7.0",
     "vuex": "^3.1.0"
   },
   "devDependencies": {

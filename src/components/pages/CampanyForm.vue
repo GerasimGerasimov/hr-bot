@@ -138,9 +138,9 @@
 //{{ candidate.Checked ? `&#x2611` : `&#x2610` }}
 import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
-import { format } from 'path';
+import { format } from 'path'
 import Candidate from "../../classes/candidate.js"
-import { constants } from 'crypto';
+import { constants } from 'crypto'
 
 export default {
     data (){
@@ -207,7 +207,7 @@ export default {
             //Гружу даные кандидатов
             //try/catch внутри цикла, чтобы грузились все возможные канидаты
             //и цикл не останавливался на "битых" данных
-            var candidates = [] //массив для накопления кандидатов ;-)
+            let candidates = [] //массив для накопления кандидатов ;-)
             try {
                 this.loading = true
                 const load = async () => {

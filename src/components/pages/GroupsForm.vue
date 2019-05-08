@@ -89,7 +89,6 @@ import SearchInput   from "../ui/VSearchInput.vue"
 import GroupTemplate from "../../classes/group.js"
 import TabSheets from '../ui/VTabSheets.vue'
 import IconsToolBar from '../ui/VIconsToolBar.vue'
-import { async } from 'q';
 
 export default {
     data (){
@@ -262,13 +261,15 @@ export default {
             group.Visible = true
         }, 
         async deleteGroup(group){
-            console.log('deleteGroup',group)
-            try {
-                await this.$store.dispatch('DELETE_GROUP', group.uri)
-                //удаление на сервере прошло без ошибок, надо удалить у себя
-                this.$store.commit('deleteGroup', group);
-            } catch (err) {
-                console.log(`Группа не удалилась:  ${err}`)
+            if (confirm("Удалить группу?")) {
+                console.log('deleteGroup',group)
+                try {
+                    await this.$store.dispatch('DELETE_GROUP', group.uri)
+                    //удаление на сервере прошло без ошибок, надо удалить у себя
+                    this.$store.commit('deleteGroup', group);
+                } catch (err) {
+                    console.log(`Группа не удалилась:  ${err}`)
+                }
             }
         },               
         sortBy (key) {
