@@ -1,9 +1,11 @@
 module.exports = {
-  publicPath: '',
+  publicPath: undefined,
   outputDir: undefined,
   assetsDir: undefined,
+  //outputDir: undefined,
+  //assetsDir: undefined,
   runtimeCompiler: undefined,
-  productionSourceMap: undefined,
+  productionSourceMap: false,//undefined,
   parallel: undefined,
-  css: undefined
+  css: undefined,
 }

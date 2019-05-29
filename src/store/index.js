@@ -5,7 +5,7 @@ import GroupsController from "../Controllers/GroupsController.js"
 import CandidatesController from "../Controllers/CandidatesController.js"
 import * as ApiRouts from "../Controllers/apirouts.js"
 import GroupTemplate from "../classes/group.js"
-const URLs = require('./urls.js');
+import {getURL} from "./urls.js"
 
 Vue.use(Vuex)
 
@@ -37,19 +37,19 @@ export const store = new Vuex.Store({
         state.candidates = candidates
       },      
       updatePages(state, page){
-        state.pages = page;
+        state.pages = page
       },
       updateUsername(state, value){
-        state.username = value;
+        state.username = value
       },
       updateEmail(state, value){
-        state.email = value;
+        state.email = value
       },
       updatePassword(state, value){
         state.password = value;
       },
       updateGroups(state, value){
-        state.groups = value;
+        state.groups = value
       },
       deleteGroup(state, group){
         state.groups.splice(state.groups.indexOf(group),1)
@@ -149,7 +149,7 @@ export const store = new Vuex.Store({
         try {
           this.state.isLoading = true//показать индикатор загрузки
             this.state.token = await AuthController.getAuth(
-              URLs.getURL(ApiRouts.AUTH_GET_TOKEN), 
+              getURL(ApiRouts.AUTH_GET_TOKEN), 
                 this.state.username, 
                   this.state.password)
             commit('setLoggedIn')//установить состояние входа в систему
@@ -166,7 +166,7 @@ export const store = new Vuex.Store({
         try {
           this.state.isLoading = true//показать индикатор загрузки
           let groups =  await AuthController.getUserGroups(
-            URLs.getURL(ApiRouts.GROUPS_GET_GROUPS), 
+            getURL(ApiRouts.GROUPS_GET_GROUPS), 
               this.state.username, 
                 this.state.token)
           console.log('GET_GROUPS:', groups)
@@ -184,7 +184,7 @@ export const store = new Vuex.Store({
         try {
           console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await GroupsController.get(
-            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+            getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token)
           return result
@@ -198,7 +198,7 @@ export const store = new Vuex.Store({
         try {
           console.log('CREATE_GROUP:', this.state.campany)
           await GroupsController.add(
-            URLs.getURL(ApiRouts.GROUPS_ADD_GROUP), 
+            getURL(ApiRouts.GROUPS_ADD_GROUP), 
               this.state.username, 
                 this.state.token,
                   this.state.campany)
@@ -212,7 +212,7 @@ export const store = new Vuex.Store({
           let data = changes.data
           console.log('SAVE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri), data)
           const result = await GroupsController.put(
-            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+            getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token,
                   data)
@@ -226,7 +226,7 @@ export const store = new Vuex.Store({
         try {
           console.log('DELETE_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await GroupsController.delete(
-            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+            getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token)
           return result
@@ -240,7 +240,7 @@ export const store = new Vuex.Store({
         try {
           //console.log('GET_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await CandidatesController.get(
-            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+            getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token)
           return result
@@ -255,7 +255,7 @@ export const store = new Vuex.Store({
           let data = changes.data
           console.log('SAVE_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri), data)
           const result = await CandidatesController.put(
-            URLs.getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
+            getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token,
                   data)
@@ -269,7 +269,7 @@ export const store = new Vuex.Store({
       GET_CANDIDATES ({commit}, payload) {
           console.log('GET_CANDIDATES:')
           const url = 'user';
-          CandidatesController.getList(URLs.getURL(url), this.state.campany.Candidates)
+          CandidatesController.getList(getURL(url), this.state.campany.Candidates)
           .then(result => {
             console.log('GET_CANDIDATES :', result)
           })
