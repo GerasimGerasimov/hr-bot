@@ -158,3 +158,14 @@ button.__button:active { /* при нажатии */
   margin-right: -50%;
   transform: translate(-50%, 0%)
 }
+
+.progresser {
+  width: 300px;
+  height: 80px;
+  display: block;
+  position: absolute;
+  top: 20px;/*положение спинера*/
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, 0%)   
+}

@@ -2,7 +2,7 @@ import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 const validationGetGroupJSON = data => {
     if (!data.hasOwnProperty('data'))       throw new PropertyRequiredError('data')
-    console.log('GetGroup:data:',data)
+    //console.log('GetGroup:data:',data)
     return data.data
 }
 
@@ -18,7 +18,7 @@ export default class GroupsController {
 
     static async get (url, username, token) {
         try {          
-            console.log('getGroup')
+            //console.log('getGroup')
             return await fetch (url, {
                     method: 'GET',
                     //mode:"cors",

@@ -161,13 +161,13 @@ export default {
         async getGroupsData(){
             //пока выведу список групп
             const groups = this.$store.state.groups
-            console.log('getGroupsData()=>',groups)
+            //console.log('getGroupsData()=>',groups)
             //создам массив API URL запросов данных Групп
             const list = [] //массив URI ДБ Групп
             for (let item in groups){
                 list.push({group:groups[item], uri: groups[item].uri})
             }
-            console.log('getGroupsData().list=>',list)
+            //console.log('getGroupsData().list=>',list)
             //теперь зная ко-во Групп, можно сделать ProgressBar
             //... в какой нибудь из спринтов
             //Гружу даные Групп
@@ -239,7 +239,7 @@ export default {
         //Получает выбранный в таблице объект Группа
         //Инициирует открытие страницы данных Группы с загрузкой соответсвущих полей
         async entryToGroup(group){
-            console.log('entryToGroup',group)
+            //console.log('entryToGroup',group)
             try {
                 let res = await this.$store.dispatch('GET_GROUP', group.uri)
                 Object.assign(group, res[group.uri]) //дополняю группу полными данными из БД

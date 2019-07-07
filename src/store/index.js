@@ -92,11 +92,11 @@ export const store = new Vuex.Store({
           }
         }
         */
-        console.log('enterToGroups:result',state.groups)
+        //console.log('enterToGroups:result',state.groups)
         getGroupStatus(state.groups);//опредедить статусы загруженных групп
       },
       enterToCampany(state, value) {//вход в Кампанию
-        console.log('enterToCampany:', value);
+        //console.log('enterToCampany:', value);
         state.campany= value;//
         state.pages = 'campany';//следующая страница - кампания!
       },
@@ -114,7 +114,7 @@ export const store = new Vuex.Store({
         state.campany.Employer = value;
       },
       updateGroupData(state, value){
-        console.log('updateGroupData',value.group,value.newdata)
+        //console.log('updateGroupData',value.group,value.newdata)
         Object.assign(value.group,value.newdata)
       },
       updateGroup  (state, value){
@@ -169,7 +169,7 @@ export const store = new Vuex.Store({
             getURL(ApiRouts.GROUPS_GET_GROUPS), 
               this.state.username, 
                 this.state.token)
-          console.log('GET_GROUPS:', groups)
+          //console.log('GET_GROUPS:', groups)
           this.state.isLoading = false//скрыть индикатор загрузки
           commit('enterToGroups',groups)
           return groups
@@ -182,7 +182,7 @@ export const store = new Vuex.Store({
       //Получаю инфу конкретной группы
       async GET_GROUP ({commit, dispatch}, uri) {
         try {
-          console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
+          //console.log('GET_GROUP:', ApiRouts.GROUPS_URI_GROUP(uri))
           const result = await GroupsController.get(
             getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 

@@ -78,10 +78,23 @@
             </div>                                                         
         </div>
         <div class="p-relative campany-form pt8">
-            <!-- индикатор загрузки/ожидания изменений-->
+            <!-- спиннер ожидания изменений-->
             <div class="wait_loading" v-show="loading">
                 <img src="/img/spinner-icon-0.gif" alt="Загрузка...">
-            </div>             
+                <progresser
+                    class="progresser"
+                    :maxSamples = "SamplesInProgresser"
+                    :Point = "Point"
+                ></progresser>  
+            </div>
+            <!-- индикатор загрузки записей-->
+            <div class="wait_loading" v-show="LoadRecords">
+                <progresser
+                    class="progresser" v-show="LoadRecords"
+                    :maxSamples = "SamplesInProgresser"
+                    :Point = "Point"
+                ></progresser>  
+            </div>                     
             <div class="menu">
                 <p class="menu-text font-size-16 font-weight-600">Кандидаты</p>
                 <div class="line" style="width:90%"></div>
@@ -138,9 +151,8 @@
 //{{ candidate.Checked ? `&#x2611` : `&#x2610` }}
 import AutoHeightTextArea from '../ui/VAutoHeightTextArea.vue'
 import TabSheets from '../ui/VTabSheets.vue'
-import { format } from 'path'
 import Candidate from "../../classes/candidate.js"
-import { constants } from 'crypto'
+import Progresser from '../ui/VProgresser.vue'
 
 export default {
     data (){
@@ -154,7 +166,12 @@ export default {
                 TabIndex:0
             },
             columns: ['Check', 'Статус', 'Имя', 'Должность', 'Место работы','URL','Примечание'],
-
+            getCandidates: undefined,//далее это будет Promis на асинхронную функцию
+                            //загрузки кандидатов, чтобы её можно было прервать
+            //Индикатор загрузки
+            LoadRecords:false,
+            SamplesInProgresser:400,
+            Point:{value:0}           
         }
     },
     created: function(){
@@ -208,15 +225,19 @@ export default {
             //try/catch внутри цикла, чтобы грузились все возможные канидаты
             //и цикл не останавливался на "битых" данных
             let candidates = [] //массив для накопления кандидатов ;-)
+            this.SamplesInProgresser = uris.length
             try {
-                this.loading = true
+                this.LoadRecords = true
                 const load = async () => {
                     for (let item of uris) {
                         try {
                             let candidate = new Candidate()
+                            const start = new Date().getTime()
                             candidate = await this.$store.dispatch('GET_CANDIDATE', item)
+                            const stop = new Date().getTime() 
                             candidate.uri = item
                             candidates.push(candidate)
+                            this.Point = {value:(stop-start)}
                         }
                         catch (err){
                             console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
@@ -224,12 +245,15 @@ export default {
                     }
                 }
                 //console.log('load:=>', load()) неудачная попытка перехватить Promise
-                const result = await load()
+                //this.getCandidates = await load() //запускаю функцию загрузки и запоминаю
+                                                  //Promis на неё
+                this.getCandidates = load 
+                await this.getCandidates()
                 this.$store.commit('addCandidates',candidates)
-                this.loading = false
+                this.LoadRecords = false
             }
             catch (err) {
-                this.loading = false
+                this.LoadRecords = false
             }
         },
         createGroup(){
@@ -377,8 +401,15 @@ export default {
     },
     components: {
         AutoHeightTextArea,
-        TabSheets
-    }
+        TabSheets,
+        Progresser
+    },
+    beforeDestroy() {//перед закрытием формы
+        //надо завершить асинхронные функции
+        console.log('ЗАкрываю форму!!!', 
+            this.getCandidates)
+        //this.getCandidates
+  }
 }
 
 </script>
