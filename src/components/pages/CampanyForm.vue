@@ -81,11 +81,6 @@
             <!-- спиннер ожидания изменений-->
             <div class="wait_loading" v-show="loading">
                 <img src="/img/spinner-icon-0.gif" alt="Загрузка...">
-                <progresser
-                    class="progresser"
-                    :maxSamples = "SamplesInProgresser"
-                    :Point = "Point"
-                ></progresser>  
             </div>
             <!-- индикатор загрузки записей-->
             <div class="wait_loading" v-show="LoadRecords">
