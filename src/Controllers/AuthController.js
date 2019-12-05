@@ -23,6 +23,7 @@ export default class AuthController {
 
     //идентификация
     static async getAuth (url, username, password) {
+        console.log(`${username}:${password}`)
         try {
             return await fetch(url,{
                 method: "POST",

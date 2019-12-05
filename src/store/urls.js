@@ -4,9 +4,9 @@ module.exports  = {
 };
 */
 
-const DEBUG_MODE = true
+const DEBUG_MODE = false
 const DEV_ROOT  = "http://localhost:5000/"
-const DIST_ROOT = "http://130.193.55.125:5000/"
+const DIST_ROOT = "https://api.hrhelper.ru/"
 
 export function getURL(url){
     let _url = DEBUG_MODE?(DEV_ROOT+url):(DIST_ROOT+url)
