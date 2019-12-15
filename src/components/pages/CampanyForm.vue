@@ -112,9 +112,10 @@
                     </tr>
                     </thead>                    
                     <tbody>
-                    <tr v-for="candidate in filteredData" :key="candidate.filterKey" >
+                        <!--  :key="candidate.filterKey" -->
+                    <tr v-for="candidate in filteredData" :key="candidate.uri">
                         <td align="center">
-                            <p
+                             <p
                                 class="p-status font-weight-900 font-size-24"
                                 :class="[candidate.Checked ? 'btn-check' : 'btn-uncheck']"
                                 @click="changeChecked(candidate)"
@@ -122,9 +123,9 @@
                         </td>
                         <td>
                             <p 
-                              :class=StatusCell.Icon(candidate.Status)
-                              :title=StatusCell.Title(candidate.Status)
-                            ></p>
+                                :class=StatusCell.Icon(candidate.Status)
+                                :title=StatusCell.Title(candidate.Status) >
+                            </p>
                         </td>
                         <td>{{candidate.FullName}}</td>
                         <td>{{candidate.Position}}</td>
@@ -212,8 +213,9 @@ export default {
             //создам массив API URL запросов данных Кандидатов
             const uris = [] //массив URI ДБ кандидатов
             for (let item in campany.Candidates){
-                uris.push(campany.Candidates[item])
-            }
+                    uris.push(campany.Candidates[item])
+                }
+            uris.length = 10; //DEBUG ограничение длины массива
             //теперь зная ко-во кандидатов, можно сделать ProgressBar
             //... в какой нибудь из спринтов
             //Гружу даные кандидатов
@@ -275,7 +277,7 @@ export default {
             //spinner	f110= Added Кандидат добавлен ещё НЕ принял приглашение
             //handshake	f2b5  = InvitationAccepted Кандидат принял предложение
             //comments  f086 = PrivateMessageRespond Кандидат ответил на личное сообщение
-           const states = {
+            const states = {
                'Added':{
                    class:'status-added fa-spin',
                    title:'Кандидат добавлен но ещё НЕ принял приглашение'},
@@ -288,16 +290,16 @@ export default {
                'default':{
                    class:'status-default',
                    title:'Статус Кандидата не определён'}
-           }
+            }
             return {
-               Icon: function(status) {
-                   return (states[status].class || states['default'].class)
-               },
-               Title: function (status){
-                   return (states[status].title || states['default'].title)
-               }
-           } 
-        }
+                Icon: function(status) {
+                    return ((states[status]) ? states[status].class : states['default'].class)
+                },
+                Title: function (status){
+                    return ((states[status]) ? states[status].title : states['default'].title)
+                }
+            }
+        } 
     },
     computed: {
         filteredData() {
@@ -310,6 +312,7 @@ export default {
         },        
         getTabIndex() {
             console.log('watch:selectedTabSheet:',this.tabSheetsEmployersSelect.TabIndex)
+            return this.tabSheetsEmployersSelect.TabIndex
         },
         Summary:{
             get() {

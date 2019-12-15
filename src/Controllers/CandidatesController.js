@@ -1,8 +1,16 @@
 import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 const validationGetCandidateJSON = data => {
-    //console.log('Get Candidate:data:',data)
-    return data
+    console.log('Get Candidate:data:',data)
+
+    console.log(Object.keys(data))
+    let o = data['data'];
+    let key = Object.keys(o)[0];
+    let candidate = o[key]
+    console.log('Get Candidate:', candidate)
+    candidate.ID = 0;
+    return candidate
+    //return data
 }
 
 
