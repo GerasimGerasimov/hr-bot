@@ -112,7 +112,6 @@
                     </tr>
                     </thead>                    
                     <tbody>
-                        <!--  :key="candidate.filterKey" -->
                     <tr v-for="candidate in filteredData" :key="candidate.uri">
                         <td align="center">
                              <p
