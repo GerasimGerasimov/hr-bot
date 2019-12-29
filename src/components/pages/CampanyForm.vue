@@ -122,8 +122,8 @@
                         </td>
                         <td>
                             <p 
-                                :class=StatusCell.Icon(candidate.Status)
-                                :title=StatusCell.Title(candidate.Status) >
+                                :class=getStatusCell(candidate.Status).Icon
+                                :title=getStatusCell(candidate.Status).Title>
                             </p>
                         </td>
                         <td>{{candidate.FullName}}</td>
@@ -153,7 +153,6 @@ export default {
     data (){
         return {
             loading:false, //индикатор ожидания
-            StatusCell:this.getStatusCell(),
             collapse: false,
             selectedTabSheet: {},
             tabSheetsEmployersSelect: {
@@ -196,7 +195,7 @@ export default {
         async changeChecked(candidate){
             this.loading = true
             try {
-                await this.$store.dispatch('SAVE_CANDIDATE', {uri:candidate.uri, data:{Checked:!candidate.Checked}})
+                await this.$store.dispatch('SAVE_CANDIDATE', {uri:candidate.uri, Data:{Checked:!candidate.Checked}})
                 candidate.Checked = !candidate.Checked
                 this.loading = false
             } catch (err) {
@@ -214,7 +213,7 @@ export default {
             for (let item in campany.Candidates){
                     uris.push(campany.Candidates[item])
                 }
-            uris.length = 10; //DEBUG ограничение длины массива
+            //uris.length = 10; //DEBUG ограничение длины массива
             //теперь зная ко-во кандидатов, можно сделать ProgressBar
             //... в какой нибудь из спринтов
             //Гружу даные кандидатов
@@ -291,12 +290,8 @@ export default {
                    title:'Статус Кандидата не определён'}
             }
             return {
-                Icon: function(status) {
-                    return ((states[status]) ? states[status].class : states['default'].class)
-                },
-                Title: function (status){
-                    return ((states[status]) ? states[status].title : states['default'].title)
-                }
+                Icon: (states[status]) ? states[status].class : states['default'].class,
+                Title: `${status}: ${((states[status]) ? states[status].title : states['default'].title)}`
             }
         } 
     },

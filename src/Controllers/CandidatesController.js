@@ -2,18 +2,17 @@ import {PropertyRequiredError, handledResponse} from "../classes/errors.js"
 
 const validationGetCandidateJSON = data => {
     console.log('Get Candidate:data:',data)
-
-    console.log(Object.keys(data))
-    let o = data['data'];
-    let key = Object.keys(o)[0];
-    let candidate = o[key]
+    let key = Object.keys(data['data'])[0];//ключ /data/candidates/:id
+    let candidate = data['data'][key]
     console.log('Get Candidate:', candidate)
-    candidate.ID = 0;
+    //candidate.ID = 0;
     return candidate
-    //return data
 }
 
 
+const validationPutCandidateJSON = data => {
+    return data
+}
 export default class CandidatesController {
     constructor () {
     }
@@ -82,7 +81,7 @@ export default class CandidatesController {
                     body: JSON.stringify(changes)
             })
             .then (handledResponse)
-            .then (validationGetCandidateJSON)
+            .then (validationPutCandidateJSON)
         } catch (error) {
             console.log('putCandidate:error',error)
             throw new Error(`put.Canditate data not changed: ${error}`)

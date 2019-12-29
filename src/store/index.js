@@ -252,13 +252,12 @@ export const store = new Vuex.Store({
       async SAVE_CANDIDATE ({commit, dispatch}, changes) {//сохранение изменённой информации о кандидате
         try {
           let uri = changes.uri
-          let data = changes.data
-          console.log('SAVE_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri), data)
+          console.log('SAVE_CANDIDATE:', ApiRouts.GROUPS_URI_GROUP(uri), changes)
           const result = await CandidatesController.put(
             getURL(ApiRouts.GROUPS_URI_GROUP(uri)), 
               this.state.username, 
                 this.state.token,
-                  data)
+                  changes)
           return result
         } catch(error) {//отрабатываю ошибку коннекта
             console.log('SAVE_CANDIDATE failed', error);
