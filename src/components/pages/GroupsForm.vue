@@ -175,20 +175,19 @@ export default {
             //и цикл не останавливался на "битых" данных
             try {
                 this.loading = true
-                const load = async () => {
-                    for (let item of list) {
-                        try {
-                            let group = item.group;//new  GroupTemplate()
-                            let result= await this.$store.dispatch('GET_GROUP', item.uri)
-                            //группы у меня уже есть, нужно их дополнить прочитанными данными
-                            this.$store.commit('updateGroupData',{group, newdata:result[item.uri]})
-                        }
-                        catch (err){
-                            console.log(`данные Группы ${item} не прочитаны:  ${err}`)
-                        }
+                const load = async (item) => {
+                    try {
+                        let group = item.group;//new  GroupTemplate()
+                        let result= await this.$store.dispatch('GET_GROUP', item.uri)
+                        //группы у меня уже есть, нужно их дополнить прочитанными данными
+                        this.$store.commit('updateGroupData',{group, newdata:result[item.uri]})
+                    }
+                    catch (err){
+                        console.log(`данные Группы ${item} не прочитаны:  ${err}`)
                     }
                 }
-                const result = await load()
+                let requests = list.map(item=> load(item));    
+                await Promise.all(requests);
                 this.loading = false
             }
             catch (err) {
