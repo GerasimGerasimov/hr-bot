@@ -223,27 +223,22 @@ export default {
             this.SamplesInProgresser = uris.length
             try {
                 this.LoadRecords = true
-                const load = async () => {
-                    for (let item of uris) {
-                        try {
-                            let candidate = new Candidate()
-                            const start = new Date().getTime()
-                            candidate = await this.$store.dispatch('GET_CANDIDATE', item)
-                            const stop = new Date().getTime() 
-                            candidate.uri = item
-                            candidates.push(candidate)
-                            this.Point = {value:(stop-start)}
-                        }
-                        catch (err){
-                            console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
-                        }
+                const loadOne = async (item) => {
+                    try {
+                        let candidate = new Candidate()
+                        const start = new Date().getTime()
+                        candidate = await this.$store.dispatch('GET_CANDIDATE', item)
+                        const stop = new Date().getTime() 
+                        candidate.uri = item
+                        candidates.push(candidate)
+                        this.Point = {value:(stop-start)}
                     }
-                }
-                //console.log('load:=>', load()) неудачная попытка перехватить Promise
-                //this.getCandidates = await load() //запускаю функцию загрузки и запоминаю
-                                                  //Promis на неё
-                this.getCandidates = load 
-                await this.getCandidates()
+                    catch (err){
+                        console.log(`данные Кандидата ${item} не прочитаны:  ${err}`)
+                    }
+                }  
+                let requests = uris.map(uri => loadOne(uri));    
+                await Promise.all(requests);          
                 this.$store.commit('addCandidates',candidates)
                 this.LoadRecords = false
             }
