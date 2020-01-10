@@ -214,11 +214,6 @@ export default {
                     uris.push(campany.Candidates[item])
                 }
             //uris.length = 10; //DEBUG ограничение длины массива
-            //теперь зная ко-во кандидатов, можно сделать ProgressBar
-            //... в какой нибудь из спринтов
-            //Гружу даные кандидатов
-            //try/catch внутри цикла, чтобы грузились все возможные канидаты
-            //и цикл не останавливался на "битых" данных
             let candidates = [] //массив для накопления кандидатов ;-)
             this.SamplesInProgresser = uris.length
             try {

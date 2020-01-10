@@ -154,46 +154,32 @@ export default {
     },
     async created() {
         await this.$store.dispatch('GET_USER_GROUPS')//получаю сокращённую инфу о группах
-        //а теперь полную
-        this.getGroupsData()
+        this.getGroupsData()//а теперь полную
     },
     methods: {
-        async getGroupsData(){
-            //пока выведу список групп
-            const groups = this.$store.state.groups
-            //console.log('getGroupsData()=>',groups)
-            //создам массив API URL запросов данных Групп
-            const list = [] //массив URI ДБ Групп
-            for (let item in groups){
-                list.push({group:groups[item], uri: groups[item].uri})
-            }
-            //console.log('getGroupsData().list=>',list)
-            //теперь зная ко-во Групп, можно сделать ProgressBar
-            //... в какой нибудь из спринтов
-            //Гружу даные Групп
-            //try/catch внутри цикла, чтобы грузились все возможные Группы
-            //и цикл не останавливался на "битых" данных
+        async getOneGroupData(item) {
             try {
-                this.loading = true
-                const load = async (item) => {
-                    try {
-                        let group = item.group;//new  GroupTemplate()
-                        let result= await this.$store.dispatch('GET_GROUP', item.uri)
-                        //группы у меня уже есть, нужно их дополнить прочитанными данными
-                        this.$store.commit('updateGroupData',{group, newdata:result[item.uri]})
-                    }
-                    catch (err){
-                        console.log(`данные Группы ${item} не прочитаны:  ${err}`)
-                    }
-                }
-                let requests = list.map(item=> load(item));    
-                await Promise.all(requests);
-                this.loading = false
+                const group = item;
+                let result= await this.$store.dispatch('GET_GROUP', item.uri)
+                //группы у меня уже есть, нужно их дополнить прочитанными данными
+                this.$store.commit('updateGroupData',{group, newdata:result[item.uri]})
             }
-            catch (err) {
-                this.loading = false
+            catch (err){
+                console.log(`данные Группы ${item} не прочитаны:  ${err}`)
             }
         },
+
+        async getGroupsData(){
+            this.loading = true
+            try {
+                let requests = this.$store.state.groups.map(item=> this.getOneGroupData(item));    
+                await Promise.all(requests);
+            }
+            catch (err) {
+            }
+            this.loading = false
+        },
+
         //при клике на ячейке c кнопками-actions, ячейка знает группу group
         //Когда юзер кликнул на ToolBar, то в Action попадает инфа о нажатой
         //кнопки в ToolBar`e. Так зная group и action можно производить
@@ -201,6 +187,7 @@ export default {
         onClickToolCell(group) {
             this.applyAction(group, this.IconsToolBarData.Action.action) 
         },
+
         //Выбор действия для группы
         applyAction(group, action) {
             let doAction = {
